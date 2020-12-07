@@ -20,7 +20,7 @@ fn is_valid2(s: &str) -> bool {
         min <= iyear && iyear <= max
     }
     let result : HashMap<&str, bool> = s.split_whitespace().map(|pair| {
-        let kv = pair.split(":").collect::<Vec<&str>>();
+        let kv = pair.split(':').collect::<Vec<&str>>();
         let (key, value): (&str, &str) = (kv[0], kv[1]);
         let is_valid = match key {
             "byr" => year_valid(value, 1920, 2002),
@@ -51,7 +51,7 @@ fn is_valid2(s: &str) -> bool {
     is_valid1(s) && result.values().all(|v| v == &true)
 }
 
-fn test(input: &String) -> (usize, usize) {
+fn test(input: &str) -> (usize, usize) {
     let lines = input.split("\n\n").collect::<Vec<&str>>();
 
     let p1 = lines.iter().filter(|l| is_valid1(*l)).count();

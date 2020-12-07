@@ -12,8 +12,8 @@ fn parse_child_bag(bag: &str) -> Option<(u32, &str)> {
         static ref CHILD_BAG: Regex = Regex::new(r"(\d+)\s*(.*?)s?$").unwrap();
     }
 
-    CHILD_BAG.captures(bag).and_then(|c| {
-        Some((u32::from_str(&c[1]).expect("Could not parse number of bags"), c.get(2).unwrap().as_str()))
+    CHILD_BAG.captures(bag).map(|c| {
+        (u32::from_str(&c[1]).expect("Could not parse number of bags"), c.get(2).unwrap().as_str())
     })
 }
 

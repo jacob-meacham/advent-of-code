@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use common::benchmarking::benchmark_test;
 
-fn test(input: &String) -> (usize, usize) {
+fn test(input: &str) -> (usize, usize) {
     let groups = input.split("\n\n");
 
     let p1 = groups.clone()
