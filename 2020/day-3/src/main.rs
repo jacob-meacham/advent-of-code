@@ -19,13 +19,13 @@ impl Toboggan {
 }
 
 fn test<'a, I>(lines: I) -> (u32, u32) where I: Iterator<Item = &'a String> {
-    let toboggans = [Toboggan::new(3, 1), Toboggan::new(1, 1), Toboggan::new(5, 1), Toboggan::new(7, 1), Toboggan::new(1, 2)];
-    let traveled_toboggans = lines.skip(1)
+    let mut toboggans = [Toboggan::new(3, 1), Toboggan::new(1, 1), Toboggan::new(5, 1), Toboggan::new(7, 1), Toboggan::new(1, 2)];
+    lines.skip(1)
         .enumerate()
-        .fold(toboggans, |mut toboggans, (idx, line)| {
+        .for_each(|(idx, line)| {
             // Fold over all of the slopes at the same time.
             // We mutate in place because the idea of creating n new vectors for each line of input was icky.
-            toboggans.iter_mut().for_each(|toboggan| {
+            for toboggan in toboggans.iter_mut() {
                 if (idx + 1) as u32 % toboggan.y != 0 {
                     // We don't need to touch this toboggan on this line
                     return
@@ -39,12 +39,10 @@ fn test<'a, I>(lines: I) -> (u32, u32) where I: Iterator<Item = &'a String> {
 
                 toboggan.position += toboggan.x;
                 toboggan.num_trees += is_tree;
-            });
-
-            toboggans
+            }
         });
 
-    (traveled_toboggans[0].num_trees, traveled_toboggans.iter().map(|t| t.num_trees).product::<u32>())
+    (toboggans[0].num_trees, toboggans.iter().map(|t| t.num_trees).product::<u32>())
 }
 
 fn main() {

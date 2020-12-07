@@ -1,5 +1,4 @@
 use std::collections::HashSet;
-use std::iter::FromIterator;
 use common::benchmarking::benchmark_test;
 
 fn test(input: &String) -> (usize, usize) {
@@ -12,13 +11,14 @@ fn test(input: &String) -> (usize, usize) {
         .len()).sum();
 
     // Intersect all answers with each person's answers
-    let p2 = groups.clone().fold(0, |count, group| {
-        let full_set : HashSet<char> = "abcdefghijklmnopqrstuvwxyz".chars().collect();
-        count + group.split_whitespace().fold(full_set, |full_set, answers| {
-            let answer_set = answers.chars().collect::<HashSet<char>>();
-            HashSet::from_iter(full_set.intersection(&answer_set).cloned())
+    let full_set : HashSet<char> = "abcdefghijklmnopqrstuvwxyz".chars().collect();
+    let p2 = groups.clone().map(|group| {
+        group.split_whitespace()
+            .map(|s| s.chars().collect::<HashSet<char>>())
+            .fold(full_set.clone(), |intersection, answers| {
+                (&intersection) & (&answers)
         }).len()
-    });
+    }).sum();
 
     (p1, p2)
 }
