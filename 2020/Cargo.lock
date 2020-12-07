@@ -40,6 +40,8 @@ name = "day-4"
 version = "0.1.0"
 dependencies = [
  "common",
+ "lazy_static",
+ "regex",
 ]
 
 [[package]]
