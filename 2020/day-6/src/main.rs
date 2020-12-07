@@ -5,9 +5,11 @@ use common::benchmarking::benchmark_test;
 fn test(input: &String) -> (usize, usize) {
     let groups = input.split("\n\n");
 
-    let p1 = groups.clone().fold(0, |count, group| {
-        count + group.chars().filter(|c| !c.is_whitespace()).collect::<HashSet<char>>().len()
-    });
+    let p1 = groups.clone()
+        .map(|g| g.chars()
+        .filter(|c| !c.is_whitespace())
+        .collect::<HashSet<_>>()
+        .len()).sum();
 
     // Intersect all answers with each person's answers
     let p2 = groups.clone().fold(0, |count, group| {
