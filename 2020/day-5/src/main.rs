@@ -22,7 +22,7 @@ fn test<'a, I>(lines: I) -> (i32, i32) where I: Iterator<Item = &'a String> {
 
     let all_seats : HashSet<i32> = (0..=*max_seat).collect();
     let p2 = all_seats.difference(&seats).filter(|seat| {
-        *seat > &10 && *seat < &(max_seat - 10)
+        *seat > &50 && *seat < &(max_seat - 50)
     }).next().unwrap();
 
     (*max_seat, *p2)
