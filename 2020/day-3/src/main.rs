@@ -26,8 +26,6 @@ fn main() {
             // Fold over all of the slopes at the same time.
             let line = line.unwrap();
 
-            let mut debug = String::from(&line);
-
             // We mutate in place because the idea of creating n new vectors for each line of input was icky.
             toboggans.iter_mut().for_each(|toboggan| {
                 if (idx + 1) as u32 % toboggan.y != 0 {
@@ -41,14 +39,9 @@ fn main() {
                     _ => 0
                 };
 
-                let i = (toboggan.position as usize + toboggan.x as usize) % line.len();
-                debug.replace_range(i..i, &toboggan.x.to_string());
-
                 toboggan.position += toboggan.x;
                 toboggan.num_trees += is_tree;
             });
-
-            println!("{}", debug);
 
             toboggans
     });
