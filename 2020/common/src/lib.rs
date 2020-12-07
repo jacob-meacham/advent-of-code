@@ -37,9 +37,11 @@ pub mod benchmarking {
 
     pub fn benchmark_test<F>(f: F)
         where F: Fn() {
-        let avg_seconds = time(f, 20);
-        if avg_seconds > 0.5 {
+        let avg_seconds = time(f, 10);
+        if avg_seconds > 0.1 {
             println!("❌ Average Seconds: {}", avg_seconds);
+        } else if avg_seconds < 0.000001000 {
+            println!("❌ No Solution Detected");
         } else {
             println!("✅ Average Seconds: {}", avg_seconds);
         }
