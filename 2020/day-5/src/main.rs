@@ -1,11 +1,9 @@
-use std::io::BufRead;
 use std::collections::HashSet;
+use common::benchmarking::benchmark_test;
 
 // Just treat the slices as binary numbers
-fn main() {
-    let seats: HashSet<i32> = common::input::open_input().lines().map(|line| {
-        let seat = line.unwrap();
-
+fn test<'a, I>(lines: I) -> (i32, i32) where I: Iterator<Item = &'a String> {
+    let seats: HashSet<i32> = lines.map(|seat| {
         let row_str = String::from(&seat[0..7])
             .replace("B", "1")
             .replace("F", "0");
@@ -27,7 +25,14 @@ fn main() {
         *seat > &10 && *seat < &(max_seat - 10)
     }).next().unwrap();
 
-    println!("Part 1: {}", seats.iter().max().unwrap());
-    println!("Part 2: {}", p2);
+    (*max_seat, *p2)
 }
+fn main() {
+    let lines = common::input::open_input_as_vector();
+    let (p1, p2) = test(lines.iter());
 
+    println!("✅ Part 1: {}", p1);
+    println!("✅ Part 2: {}", p2);
+
+    benchmark_test(|| { test(lines.iter().clone()); });
+}

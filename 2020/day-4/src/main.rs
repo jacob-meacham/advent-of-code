@@ -3,6 +3,7 @@ extern crate lazy_static;
 use regex::Regex;
 use std::str::FromStr;
 use std::collections::HashMap;
+use common::benchmarking::benchmark_test;
 
 fn is_valid1(s: &str) -> bool {
     ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"].iter().all(|k| s.contains(k))
@@ -50,17 +51,22 @@ fn is_valid2(s: &str) -> bool {
     is_valid1(s) && result.values().all(|v| v == &true)
 }
 
-fn main() {
-    let mut input = String::new();
-    common::input::open_input().read_to_string(&mut input).expect("Could not read input");
-
+fn test(input: &String) -> (usize, usize) {
     let lines = input.split("\n\n").collect::<Vec<&str>>();
 
     let p1 = lines.iter().filter(|l| is_valid1(*l)).count();
     let p2 = lines.iter().filter(|l| is_valid2(*l)).count();
 
-    //debug(lines);
+    (p1, p2)
+}
 
-    println!("Part 1: {}", p1);
-    println!("Part 2: {}", p2);
+fn main() {
+    let mut input = String::new();
+    common::input::open_input().read_to_string(&mut input).expect("Could not read input");
+
+    let (p1, p2) = test(&input);
+    println!("✅ Part 1: {}", p1);
+    println!("✅ Part 2: {}", p2);
+
+    benchmark_test(|| { test(&input); });
 }

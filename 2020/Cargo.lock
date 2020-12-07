@@ -10,11 +10,90 @@ dependencies = [
 ]
 
 [[package]]
+name = "bencher"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7dfdb4953a096c551ce9ace855a604d702e6e62d77fac690575ae347571717f5"
+
+[[package]]
 name = "common"
 version = "0.1.0"
+dependencies = [
+ "bencher",
+]
 
 [[package]]
 name = "day-1"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-10"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-11"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-12"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-13"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-14"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-15"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-16"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-17"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-18"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-19"
 version = "0.1.0"
 dependencies = [
  "common",
@@ -26,6 +105,48 @@ version = "0.1.0"
 dependencies = [
  "common",
  "parse-display",
+]
+
+[[package]]
+name = "day-20"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-21"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-22"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-23"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-24"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-25"
+version = "0.1.0"
+dependencies = [
+ "common",
 ]
 
 [[package]]
@@ -60,6 +181,20 @@ dependencies = [
 
 [[package]]
 name = "day-7"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-8"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
+
+[[package]]
+name = "day-9"
 version = "0.1.0"
 dependencies = [
  "common",

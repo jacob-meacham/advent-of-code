@@ -1,10 +1,8 @@
 use std::collections::HashSet;
 use std::iter::FromIterator;
+use common::benchmarking::benchmark_test;
 
-fn main() {
-    let mut input = String::new();
-    common::input::open_input().read_to_string(&mut input).expect("Could not read input");
-
+fn test(input: &String) -> (usize, usize) {
     let groups = input.split("\n\n");
 
     let p1 = groups.clone().fold(0, |count, group| {
@@ -20,6 +18,16 @@ fn main() {
         }).len()
     });
 
-    println!("Part 1: {}", p1);
-    println!("Part 2: {}", p2);
+    (p1, p2)
+}
+
+fn main() {
+    let mut input = String::new();
+    common::input::open_input().read_to_string(&mut input).expect("Could not read input");
+
+    let (p1, p2) = test(&input);
+    println!("✅ Part 1: {}", p1);
+    println!("✅ Part 2: {}", p2);
+
+    benchmark_test(|| { test(&input); });
 }
