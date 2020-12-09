@@ -56,7 +56,7 @@ fn test<'a, I>(lines: I) -> (i32, i32) where I: Iterator<Item = &'a String> {
     let (_, p1) = find_loop(&compiled_program);
 
     // Although there are probably some cool searches to do this, we can brute force all possible programs in the space very quickly (<40ms avg runtime)
-    // One option would be to memoize searches for loops. We could also attempt to search backwards
+    // One option would be to memoize searches for instructions that halt. We could also attempt to search backwards
     let p2 = (0..compiled_program.len() as usize).find_map(|i| {
         match compiled_program[i].0 {
             OpCode::NOP | OpCode::JMP => {
