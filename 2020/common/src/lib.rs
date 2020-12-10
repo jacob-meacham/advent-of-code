@@ -30,18 +30,18 @@ pub mod benchmarking {
         let end = Instant::now();
 
         let avg_nanos = end.duration_since(start).as_nanos() / iterations;
-        avg_nanos as f64 / 1_000_000_000.0
+        avg_nanos as f64 / 1_000_000.0
     }
 
     pub fn benchmark_test<F>(f: F)
         where F: Fn() {
-        let avg_seconds = time(f, 10);
-        if avg_seconds > 0.15 {
-            println!("❌ Average Seconds: {}", avg_seconds);
-        } else if avg_seconds < 0.000001000 {
+        let avg_millis = time(f, 10);
+        if avg_millis > 5.0 {
+            println!("❌ Average Milliseconds: {}", avg_millis);
+        } else if avg_millis < 0.001 {
             println!("❌ No Solution Detected");
         } else {
-            println!("✅ Average Seconds: {}", avg_seconds);
+            println!("✅ Average Milliseconds: {}", avg_millis);
         }
     }
 }
