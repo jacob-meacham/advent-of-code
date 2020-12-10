@@ -37,7 +37,6 @@ fn find_p2(all: &[i64], needle: i64) -> i64 {
     0
 }
 
-// Just treat the slices as binary numbers
 fn test(input: &str) -> (i64, i64) {
     let all: Vec<_> = input.split_whitespace()
         .map(|n| i64::from_str(n).unwrap()).collect();
