@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 common = { path = "../common" }
+array2d = "0.2.1"
