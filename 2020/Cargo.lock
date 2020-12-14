@@ -70,6 +70,9 @@ name = "day-14"
 version = "0.1.0"
 dependencies = [
  "common",
+ "hashbrown",
+ "lazy_static",
+ "regex",
 ]
 
 [[package]]
@@ -222,6 +225,12 @@ name = "fixedbitset"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "86d4de0081402f5e88cdac65c8dcdcc73118c1a7a465e2a05f0da05843a8ea33"
+
+[[package]]
+name = "hashbrown"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "29fba9abe4742d586dfd0c06ae4f7e73a1c2d86b856933509b269d82cdf06e18"
 
 [[package]]
 name = "itertools"

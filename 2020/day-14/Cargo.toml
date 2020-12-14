@@ -8,3 +8,6 @@ edition = "2018"
 
 [dependencies]
 common = { path = "../common" }
+regex = "1"
+lazy_static = "1.4.0"
+hashbrown = "0.3"
