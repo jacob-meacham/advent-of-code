@@ -1,7 +1,7 @@
 use common::benchmarking::benchmark_test;
 use std::str::FromStr;
 
-fn test(lines: &Vec<String>) -> (u32, u64) {
+fn test(lines: &[String]) -> (u32, u64) {
     let timestamp = u32::from_str(&lines[0]).unwrap();
     let parsed_lines = &lines[1].split(',').map(|s| {
         match u32::from_str(s) {
@@ -18,9 +18,10 @@ fn test(lines: &Vec<String>) -> (u32, u64) {
     // Sieve-esque
     let buses: Vec<(u64, u64)> = parsed_lines.iter().enumerate()
         .filter_map(|(index, n)| n.map_or(None,|b| Some((b as u64, index as u64)))).collect();
+
     let p2 = buses[1..].iter().fold((buses[0].0, buses[0].0), |(cur_num, multiple), bus| {
         let new_num = (cur_num..).step_by(multiple as usize)
-            .filter(|n| (n + bus.1) % bus.0 == 0).next().unwrap();
+            .find(|n| (n + bus.1) % bus.0 == 0).unwrap();
         (new_num, multiple * bus.0)
     });
 

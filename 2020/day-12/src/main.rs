@@ -19,14 +19,14 @@ fn rotate(x: i32, y: i32, angle: i32) -> (i32, i32) {
 fn test(lines: Vec<String>) -> (i32, i32) {
     let (x1, y1, _) = lines.iter().fold((0i32, 0i32, 0i32), |(x, y, facing), line| {
         let val = i32::from_str(&line[1..]).unwrap();
-        match line.chars().nth(0) {
+        match line.chars().next() {
             Some('N') => (x, y + val, facing),
             Some('S') => (x, y - val, facing),
             Some('E') => (x + val, y, facing),
             Some('W') => (x - val, y, facing),
             Some('L') => {
                 let mut new_facing = facing - val;
-                if new_facing < 0 { new_facing = 360 + new_facing }
+                if new_facing < 0 { new_facing += 360 }
                 (x, y, new_facing)
             },
             Some('R') => (x, y, (facing + val) % 360),
@@ -47,7 +47,7 @@ fn test(lines: Vec<String>) -> (i32, i32) {
 
     let ((x2, y2), _) = lines.iter().fold(((0i32, 0i32), (10i32, 1i32)), |((ship_x, ship_y), (wx, wy)), line| {
         let val = i32::from_str(&line[1..]).unwrap();
-        match line.chars().nth(0) {
+        match line.chars().next() {
             Some('N') => ((ship_x, ship_y), (wx, wy + val)),
             Some('S') => ((ship_x, ship_y), (wx, wy - val)),
             Some('E') => ((ship_x, ship_y), (wx + val, wy)),
