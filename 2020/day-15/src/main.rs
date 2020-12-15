@@ -1,5 +1,4 @@
 use common::benchmarking::benchmark_test;
-use std::str::FromStr;
 use hashbrown::HashMap;
 
 fn _find_target(input: &[u32], target: u32) -> u32 {
@@ -36,9 +35,9 @@ fn _test_fast(input: &[u32]) -> (u32, u32) {
         }
         let x = previously_seen[last_seen as usize];
         previously_seen[last_seen as usize] = n as i32;
-        match x != -1 {
-            true => n - x as u32,
-            false => 0
+        match x {
+            -1 => 0,
+            _ => n - x as u32,
         }
     });
 
