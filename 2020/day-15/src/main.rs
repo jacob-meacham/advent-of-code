@@ -3,7 +3,7 @@ use std::str::FromStr;
 use hashbrown::HashMap;
 
 fn test(input: &str) -> (u32, u32) {
-    let input_vec: Vec<_> = input.split(",")
+    let input_vec: Vec<_> = input.split(',')
         .map(|n| u32::from_str(n).unwrap())
         .collect();
     // We don't put the very last item of the input in, as that is our starting number to consider
