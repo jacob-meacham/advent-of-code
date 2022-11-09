@@ -7,22 +7,22 @@ fn test<'a, I>(lines: I) -> (i32, i32) where I: Iterator<Item = &'a String> {
         let row_str = String::from(&seat[0..7])
             .replace("B", "1")
             .replace("F", "0");
-        let row = isize::from_str_radix(&row_str, 2).unwrap();
+        let row = i32::from_str_radix(&row_str, 2).unwrap();
 
         let column_str = String::from(&seat[7..10])
             .replace("R", "1")
             .replace("L", "0");
-        let column = isize::from_str_radix(&column_str, 2).unwrap();
+        let column = i32::from_str_radix(&column_str, 2).unwrap();
 
-        (row * 8 + column) as i32
+        row * 8 + column
     }).collect();
 
     // Get missing seat ids
     let max_seat = seats.iter().max().unwrap();
 
     let all_seats : HashSet<i32> = (0..=*max_seat).collect();
-    let p2 = all_seats.difference(&seats).find(|seat| {
-        *seat > &50 && *seat < &(max_seat - 50)
+    let p2 = all_seats.difference(&seats).find(|&&seat| {
+        seat > 50 && seat < max_seat - 50
     }).unwrap();
 
     (*max_seat, *p2)

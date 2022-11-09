@@ -1,6 +1,7 @@
 use common::benchmarking::benchmark_test;
 
-// Just treat the slices as binary numbers
+
+// TODO: Lots of ways to do this, but for funsies I'll write my own recursive descent parser
 fn test<'a, I>(_lines: I) -> (i32, i32) where I: Iterator<Item = &'a String> {
     (0, 0)
 }

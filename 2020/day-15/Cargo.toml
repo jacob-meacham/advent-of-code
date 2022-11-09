@@ -9,3 +9,6 @@ edition = "2018"
 [dependencies]
 common = { path = "../common" }
 hashbrown = "0.3"
+
+[profile.release]
+lto = true
