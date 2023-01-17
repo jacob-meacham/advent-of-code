@@ -1,27 +1,30 @@
-from collections.abc import Set
 from functools import reduce
+
 
 def letter_to_score(letter):
     n = ord(letter)
     return n - 96 if n >= ord('a') else n - 65 + 27
+
 
 def part1(rucksacks):
     inventory = [({*r[0:int(len(r) / 2)]}, {*r[int(len(r) / 2):]}) for r in rucksacks]
     overlaps = [list(a.intersection(b)) for a, b in inventory]
 
     def fn(acc, xs):
-        assert(len(xs) == 1)
+        assert (len(xs) == 1)
         return acc + letter_to_score(xs[0])
+
     return reduce(fn, overlaps, 0)
 
 
 def part2(rucksacks):
-    groups = list(zip(*[iter(rucksacks)]*3))
+    groups = list(zip(*[iter(rucksacks)] * 3))
     badges = [list(set(a).intersection(b).intersection(c)) for a, b, c in groups]
 
     def fn(acc, xs):
-        assert(len(xs) == 1)
+        assert (len(xs) == 1)
         return acc + letter_to_score(xs[0])
+
     return reduce(fn, badges, 0)
 
 
