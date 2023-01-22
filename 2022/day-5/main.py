@@ -26,18 +26,19 @@ def perform_moves(buckets, moves, nine_zero_zero_zero_mode):
 def main():
     buckets = [[] for _ in range(9)]
     moves = []
-    with open('input.txt', 'r') as f:
+    with open('day-5/input.txt', 'r') as f:
         i = iter(f.readlines())
-        bucket_lines = list(itertools.takewhile(lambda line: line[0] == '[', i))
-        next(i) # skip the blank line
-        for line in i:
-            m = re.match(r'move (\d+) from (\d+) to (\d)', line)
-            moves.append((int(m.group(1)), int(m.group(2)) - 1, int(m.group(3)) - 1)) # make it 0-indexed
 
-        # reverse since we're pushing on as a stack
-        for line in reversed(bucket_lines):
-            for bucket, crate in [(b, c) for b, c in crate_generator(line) if c != ' ']:
-                buckets[bucket].append(crate)
+    bucket_lines = list(itertools.takewhile(lambda line: line[0] == '[', i))
+    next(i) # skip the blank line
+    for line in i:
+        m = re.match(r'move (\d+) from (\d+) to (\d)', line)
+        moves.append((int(m.group(1)), int(m.group(2)) - 1, int(m.group(3)) - 1)) # make it 0-indexed
+
+    # reverse since we're pushing on as a stack
+    for line in reversed(bucket_lines):
+        for bucket, crate in [(b, c) for b, c in crate_generator(line) if c != ' ']:
+            buckets[bucket].append(crate)
 
     p1 = perform_moves(copy.deepcopy(buckets), moves, True)
     p2 = perform_moves(copy.deepcopy(buckets), moves, False)
