@@ -1,3 +1,4 @@
+#!/usr/local/bin/python
 import subprocess
 
 subprocess.run(["cargo", "build", "--release"])
