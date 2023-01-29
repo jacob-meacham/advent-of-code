@@ -29,8 +29,7 @@ def part2(rucksacks):
 
 
 def main():
-    # TODO: Need to fix the folder issue
-    with open('day-3/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         rucksacks = [l.strip() for l in f.readlines()]
 
     p1 = part1(rucksacks)

@@ -35,10 +35,11 @@ class INode:
         return None
 
     def print(self, depth=0):
-        tabs = '\t'*depth
+        tabs = '\t' * depth
         print(f'{tabs} - {self.name} (dir)')
         for n in self.nodes:
             n.print(depth + 1)
+
 
 class FileNode(INode):
     def __init__(self, name, size, parent):
@@ -64,16 +65,18 @@ class FileNode(INode):
 
 
 def p1(root_node):
-    def recurse(cur_node, matching_nodes = []):
+    def recurse(cur_node, matching_nodes=[]):
         if cur_node.get_size() <= 100000:
             matching_nodes.append(cur_node)
         nodes_to_try = [n for n in cur_node.nodes if n.is_dir()]
         for n in nodes_to_try:
             recurse(n, matching_nodes)
+
     matching_nodes = []
     recurse(root_node, matching_nodes)
 
     return reduce(lambda acc, xs: acc + xs.get_size(), matching_nodes, 0)
+
 
 def p2(root_node):
     unused_space = 70000000 - root_node.get_size()
@@ -95,8 +98,9 @@ def p2(root_node):
     s = sorted(matching_nodes, key=lambda n: n.get_size())
     return s[0].get_size()
 
+
 def main():
-    with open('day-7/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         input = [l.strip() for l in f.readlines()]
 
     root_node = None
@@ -127,7 +131,7 @@ def main():
                 new_node = FileNode(match.group(2), match.group(1), current_node)
                 current_node.add_node(new_node)
 
-    root_node.get_size() # Pre-calculate sizes
+    root_node.get_size()  # Pre-calculate sizes
 
     _p1 = p1(root_node)
     _p2 = p2(root_node)

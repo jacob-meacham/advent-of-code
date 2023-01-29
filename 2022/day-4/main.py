@@ -29,8 +29,7 @@ def part2(assignments):
 
 
 def main():
-    # TODO: Need to fix the folder issue
-    with open('day-4/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         matches = [re.match(r'(\d+)-(\d+),(\d+)-(\d+)', l.strip()) for l in f.readlines()]
         assignments = [((int(m.group(1)), int(m.group(2))), (int(m.group(3)), int(m.group(4)))) for m in matches]
 

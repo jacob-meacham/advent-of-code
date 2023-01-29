@@ -71,7 +71,7 @@ def calc_scenic_distance(grid):
 
 
 def main():
-    with open('day-8/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         input = [l.strip() for l in f.readlines()]
 
     grid = []

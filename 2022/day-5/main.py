@@ -26,7 +26,7 @@ def perform_moves(buckets, moves, nine_zero_zero_zero_mode):
 def main():
     buckets = [[] for _ in range(9)]
     moves = []
-    with open('day-5/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         i = iter(f.readlines())
 
     bucket_lines = list(itertools.takewhile(lambda line: line[0] == '[', i))

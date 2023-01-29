@@ -1,4 +1,5 @@
 import argparse
+import os
 from pathlib import Path
 import time
 
@@ -31,7 +32,10 @@ def test_harness(show_timings, show_answers, timing_iterations):
         print(f'Day {i}')
         try:
             fn = load_module(f'day-{i}.main')
+            cur_dir = os.getcwd()
+            os.chdir(f'day-{i}')
             avg_millis, answer = benchmark(fn, timing_iterations)
+            os.chdir(cur_dir)
         except Exception:
             print('  ❌ No Solution Detected')
             break

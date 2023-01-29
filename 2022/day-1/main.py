@@ -16,8 +16,7 @@ def part2(elf_inventories):
 
 def main():
     elf_inventories = [[]]
-    # TODO: Need to fix the folder issue
-    with open('day-1/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         for l in f.readlines():
             l = l.strip()
             if not l:

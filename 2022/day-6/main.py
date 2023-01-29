@@ -14,7 +14,7 @@ def find_marker(code, length):
 
 
 def main():
-    with open('day-6/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         code = f.readline()
 
     return find_marker(code, 4), find_marker(code, 14)

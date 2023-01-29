@@ -25,7 +25,7 @@ def win_loss_score(mine, theirs):
 def main():
     p1_strategy = 0
     p2_strategy = 0
-    with open('day-2/input.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         rounds = [l.strip().split(' ') for l in f.readlines()]
         for (theirs, mine) in rounds:
             p1_strategy = p1_strategy + win_loss_score(mine, theirs) + score_per_choice[mine]
