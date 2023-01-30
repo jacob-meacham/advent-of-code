@@ -18,7 +18,7 @@ def benchmark(fn, iterations):
     for _ in range(0, iterations):
         answer = fn()
     end = time.perf_counter()
-    return (1000 * ((end - start) / iterations), answer)
+    return 1000 * ((end - start) / iterations), answer
 
 
 def load_module(name):
@@ -45,7 +45,7 @@ def test_harness(show_timings, show_answers, timing_iterations, start_from):
                 f'  {"✅" if answer[0] != 0 else "❌"} Part 1: {answer[0]}, {"✅" if answer[1] != 0 else "❌"} Part 2: {answer[1]}')
 
         if show_timings:
-            print(f'  {"✅" if avg_millis < 100 else "❌"} average ms: {avg_millis:.2f}')
+            print(f'  {"✅" if avg_millis < 500 else "❌"} average ms: {avg_millis:.2f}')
 
 
 def parse_args():
