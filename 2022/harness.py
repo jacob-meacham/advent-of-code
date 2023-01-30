@@ -27,8 +27,8 @@ def load_module(name):
     return getattr(module, 'main')
 
 # could of course just time with the command line, but some niceties with the harness
-def test_harness(show_timings, show_answers, timing_iterations):
-    for i in range(1, 26):
+def test_harness(show_timings, show_answers, timing_iterations, start_from):
+    for i in range(start_from, 26):
         print(f'Day {i}')
         try:
             fn = load_module(f'day-{i}.main')
@@ -55,6 +55,7 @@ def parse_args():
     parser.add_argument('--iterations', default=10)
     parser.add_argument('--timings', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--answers', action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument('--start-from', type=int, default=1)
     return parser.parse_args()
 
 
@@ -64,4 +65,4 @@ if __name__ == '__main__':
     if args.create:
         create_all()
 
-    test_harness(args.timings, args.answers, args.iterations)
+    test_harness(args.timings, args.answers, args.iterations, args.start_from)
