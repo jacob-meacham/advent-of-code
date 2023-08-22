@@ -1,6 +1,5 @@
 from functools import reduce
 
-
 def part1(elf_inventories):
     def fn(acc, xs):
         s = sum(xs)
