@@ -27,18 +27,22 @@ def load_module(name):
     return getattr(module, 'main')
 
 # could of course just time with the command line, but some niceties with the harness
-def test_harness(show_timings, show_answers, timing_iterations, start_from):
+def test_harness(show_timings, show_answers, timing_iterations, start_from, skip):
     for i in range(start_from, 26):
         print(f'Day {i}')
-        try:
-            fn = load_module(f'day-{i}.main')
-            cur_dir = os.getcwd()
-            os.chdir(f'day-{i}')
-            avg_millis, answer = benchmark(fn, timing_iterations)
-            os.chdir(cur_dir)
-        except Exception:
-            print('  ❌ No Solution Detected')
-            break
+        if i in skip:
+            answer = ['Skipped', 'Skipped']
+            avg_millis = 10000
+        else:
+            try:
+                fn = load_module(f'day-{i}.main')
+                cur_dir = os.getcwd()
+                os.chdir(f'day-{i}')
+                avg_millis, answer = benchmark(fn, timing_iterations)
+                os.chdir(cur_dir)
+            except Exception:
+                print('  ❌ No Solution Detected')
+                break
 
         if show_answers:
             print(
@@ -56,6 +60,7 @@ def parse_args():
     parser.add_argument('--timings', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--answers', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--start-from', type=int, default=1)
+    parser.add_argument('--skip', nargs='+', type=int, help='Days to skp')
     return parser.parse_args()
 
 
@@ -65,4 +70,4 @@ if __name__ == '__main__':
     if args.create:
         create_all()
 
-    test_harness(args.timings, args.answers, args.iterations, args.start_from)
+    test_harness(args.timings, args.answers, int(args.iterations), args.start_from, args.skip)

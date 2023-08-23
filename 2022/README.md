@@ -18,3 +18,5 @@ Trying for all solutions under 500ms (on 2021 M1)
 | Day 12 | 21.59       |✅     |
 | Day 13 | 11.00       |✅     |
 | Day 14 | 458.39      |✅     |
+| Day 15 | 25572.33    |❌     |
+| Day 16 | 1661.38     |❌     |  
