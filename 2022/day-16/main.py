@@ -19,10 +19,10 @@ def debug_tick(graph, time_remaining, tick_length, total_flow):
 def travelling_salesman(nodes, distance_matrix, open_mask, time_remaining, current_node, cur_release=0, memo={}):
     max_release = 0
 
-    # if open_mask in memo:
-    #     memo[open_mask] = max(memo[open_mask], cur_release)
-    # else:
-    #     memo[open_mask] = cur_release
+    if open_mask in memo:
+        memo[open_mask] = max(memo[open_mask], cur_release)
+    else:
+        memo[open_mask] = cur_release
 
     for i in range(0, len(nodes)):
         if open_mask & (1 << i) != 0:
@@ -66,10 +66,15 @@ def solve_p2(nodes, start_node, distance_matrix):
     max_release = 0
     for my_mask, my_flow in my_memo.items():
         for elephant_mask, elephant_flow in elephant_memo.items():
-            if my_mask & elephant_mask == 0:
-                max_release = max(my_flow + elephant_flow, max_release)
-
+            if my_mask & elephant_mask == 0 and my_flow + elephant_flow > max_release:
+                max_release = my_flow + elephant_flow
     return max_release
+
+    # possible_best = []
+    # for my_mask, my_flow in my_memo.items():
+    #     possible_best.extend([my_flow + elephant_flow for elephant_mask, elephant_flow in elephant_memo.items() if my_mask & elephant_mask == 0])
+    #
+    # return max(possible_best)
 
 
 def main():
@@ -90,9 +95,9 @@ def main():
     nodes = [(n, v['flow_rate']) for n, v in list(tunnel_graph.nodes.data()) if v['flow_rate'] != 0]
 
     p1 = solve_p1(nodes, 'AA', distance_matrix)
-    # p2 = solve_p2(tunnel_graph, 'AA', distance_matrix)
+    p2 = solve_p2(nodes, 'AA', distance_matrix)
 
-    return p1, 0
+    return p1, p2
 
 
 if __name__ == '__main__':
