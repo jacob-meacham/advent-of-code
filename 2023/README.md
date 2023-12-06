@@ -7,5 +7,4 @@ Using this as an excuse to get better at modern C# development.
 | Day    | Timing (ms) | Good? |
 |--------|-------------| ----  |
 | Day 1  | 2           |✅     |
-| Day 2  |             |✅     |
-| Day 3  |             |✅     |
+| Day 2  | 5           |✅     |
