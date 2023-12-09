@@ -100,7 +100,7 @@ Runner.Benchmark(delegate
 {
     Part1(lines);
     Part2(lines);
-}, "Day 1");
+}, "Day 2");
 
 public class Draw
 {
