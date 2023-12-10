@@ -8,7 +8,7 @@ IEnumerable<int> GetNumbers(string part)
         .Select(s => int.Parse(s.Trim()));
 }
 
-int Part1(List<String> lines)
+int Part1(List<string> lines)
 {
     var results = new List<int>();
     foreach (var line in lines)
@@ -30,9 +30,9 @@ int Part1(List<String> lines)
     return results.Sum();
 }
 
-int Part2(List<String> lines)
+int Part2(List<string> lines)
 {
-    List<int> numWinners = new List<int>();
+    var numWinners = new List<int>();
     foreach (var line in lines)
     {
         var parts = line.Split(": ")[1].Split(" | ");
@@ -44,9 +44,9 @@ int Part2(List<String> lines)
     
     // For each card, keep track of the additional cards per winner
     var numCards = Enumerable.Repeat(1, numWinners.Count).ToList();
-    for (int i = 0; i < numCards.Count; i++)
+    for (var i = 0; i < numCards.Count; i++)
     {
-        for (int j = 0; j < numWinners[i]; j++)
+        for (var j = 0; j < numWinners[i]; j++)
         {
             numCards[i + j + 1] += numCards[i];
         }

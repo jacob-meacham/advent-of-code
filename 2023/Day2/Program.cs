@@ -21,13 +21,13 @@ bool IsDrawPossible(Draw draw, Draw maxDraw)
     return true;
 }
 
-Draw ParseDraw(String rawDraw)
+Draw ParseDraw(string rawDraw)
 {
-    Regex drawRegex = new Regex(@"(\d+) (red|green|blue)");
+    var drawRegex = new Regex(@"(\d+) (red|green|blue)");
     var parts = rawDraw.Split(",").Select(s => drawRegex.Matches(s)[0]);
-    int red = 0;
-    int green = 0;
-    int blue = 0;
+    var red = 0;
+    var green = 0;
+    var blue = 0;
     foreach (var part in parts)
     {
         int amount = int.Parse(part.Groups[1].Value);
@@ -44,22 +44,21 @@ Draw ParseDraw(String rawDraw)
                 break;
         }
     }
-    
+
     return new Draw(red, green, blue);
 }
 
-int Part1(List<String> lines)
+int Part1(List<string> lines)
 {
-    Regex lineRegex = new Regex(@"Game (\d+): (.*)");
-    Draw maxDraw = new Draw(12, 13, 14);
-    
+    var maxDraw = new Draw(12, 13, 14);
+
     List<int> possibleGames = new List<int>();
     foreach (var l in lines)
     {
-        Match match = lineRegex.Matches(l)[0];
+        Match match = LineRegex().Matches(l)[0];
         var gameNumber = int.Parse(match.Groups[1].Value);
-        List<String> rawDraws = new List<String>(match.Groups[2].Value.Split(";"));
-        var impossibleDraws = rawDraws.Select(rd => ParseDraw(rd))
+        var rawDraws = new List<string>(match.Groups[2].Value.Split(";"));
+        var impossibleDraws = rawDraws.Select(ParseDraw)
             .Where(d => !IsDrawPossible(d, maxDraw)).ToList().Count;
         if (impossibleDraws == 0)
         {
@@ -70,20 +69,17 @@ int Part1(List<String> lines)
     return possibleGames.Sum();
 }
 
-int Part2(List<String> lines)
+int Part2(List<string> lines)
 {
-    Regex lineRegex = new Regex(@"Game (\d+): (.*)");
-    
-    List<int> products = new List<int>();
+    var products = new List<int>();
     foreach (var l in lines)
     {
-        Match match = lineRegex.Matches(l)[0];
-        var gameNumber = int.Parse(match.Groups[1].Value);
-        List<String> rawDraws = new List<String>(match.Groups[2].Value.Split(";"));
-        var minDraw = rawDraws.Select(rd => ParseDraw(rd))
-            .Aggregate(new Draw(0, 0, 0), (acc, n) => 
+        Match match = LineRegex().Matches(l)[0];
+        var rawDraws = new List<string>(match.Groups[2].Value.Split(";"));
+        var minDraw = rawDraws.Select(ParseDraw)
+            .Aggregate(new Draw(0, 0, 0), (acc, n) =>
                 new Draw(Math.Max(acc.Red, n.Red), Math.Max(acc.Green, n.Green), Math.Max(acc.Blue, n.Blue)));
-        products.Add(minDraw.Red*minDraw.Green*minDraw.Blue);
+        products.Add(minDraw.Red * minDraw.Green * minDraw.Blue);
     }
 
     return products.Sum();
@@ -101,16 +97,15 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 2");
 
-public class Draw
-{
-    public int Red { get; }
-    public int Green { get; }
-    public int Blue { get; }
+partial class Program
+{    
+    [GeneratedRegex(@"Game (\d+): (.*)")]
+    public static partial Regex LineRegex();
+}
 
-    public Draw(int red, int green, int blue)
-    {
-        Red = red;
-        Green = green;
-        Blue = blue;
-    }
+internal class Draw(int red, int green, int blue)
+{
+    public int Red { get; } = red;
+    public int Green { get; } = green;
+    public int Blue { get; } = blue;
 }

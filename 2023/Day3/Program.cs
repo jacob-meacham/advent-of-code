@@ -29,7 +29,7 @@ List<Cell> GetNeighbors(Cell[,] cells, int x, int y)
 void SetValueCells(Cell[,] schematic, int x, int y, int value, int length)
 {
     // Create the cells
-    List<Cell> cells = new List<Cell>();
+    var cells = new List<Cell>();
     for (int i = 0; i < length; i++)
     {
         cells.Add(Cell.ValueCell(value));
@@ -70,7 +70,7 @@ void Parse(Cell[,] schematic, List<string> lines)
             {
                 schematic[x+1, y+1] = Cell.EmptyCell();
                 y += 1;
-            } else if (Char.IsDigit(line[y]))
+            } else if (char.IsDigit(line[y]))
             {
                 // Get the extents of the values
                 var result = ParseValue(line, y);
@@ -87,18 +87,18 @@ void Parse(Cell[,] schematic, List<string> lines)
 }
 
 // Could do a sparse data set instead, but engine schematic is pretty small
-var lines = new List<string>(File.ReadAllLines("input.txt"));
+var allLines = new List<string>(File.ReadAllLines("input.txt"));
 
 // Keeping the same memory for the schematic instead of reallocating on each pass saves about 0.5 ms
-Cell[,] schematic = new Cell[lines[0].Length + 2, lines.Count + 2];
+var schematic = new Cell[allLines[0].Length + 2, allLines.Count + 2];
 
 int Part1(List<string> lines)
 {
     Parse(schematic, lines);
-    List<int> values = new List<int>();
-    for (int x = 0; x < schematic.GetLength(0); x++)
+    var values = new List<int>();
+    for (var x = 0; x < schematic.GetLength(0); x++)
     {
-        for (int y = 0; y < schematic.GetLength(1); y++)
+        for (var y = 0; y < schematic.GetLength(1); y++)
         {
             if (schematic[x, y].Type != CellType.Symbol)
             {
@@ -106,14 +106,16 @@ int Part1(List<string> lines)
             }
             
             // Check for unvisited values in all directions
-            List<Cell> valueNeighbors = GetNeighbors(schematic, x, y).Where(cell => cell.Type == CellType.Value).ToList();
+            var valueNeighbors = GetNeighbors(schematic, x, y).Where(cell => cell.Type == CellType.Value).ToList();
             foreach (var cell in valueNeighbors)
             {
-                if (!cell.Visited)
+                if (cell.Visited)
                 {
-                    values.Add(cell.Value);
-                    cell.MarkVisited();
+                    continue;
                 }
+                
+                values.Add(cell.Value);
+                cell.MarkVisited();
             }
         }
     }
@@ -124,10 +126,10 @@ int Part1(List<string> lines)
 int Part2(List<string> lines)
 {
     Parse(schematic, lines);
-    List<int> values = new List<int>();
-    for (int x = 0; x < schematic.GetLength(0); x++)
+    var values = new List<int>();
+    for (var x = 0; x < schematic.GetLength(0); x++)
     {
-        for (int y = 0; y < schematic.GetLength(1); y++)
+        for (var y = 0; y < schematic.GetLength(1); y++)
         {
             // Only care about gears
             if (schematic[x, y].Type != CellType.Symbol || schematic[x, y].CellChar != "*")
@@ -136,16 +138,16 @@ int Part2(List<string> lines)
             }
             
             // A bit hacky - we chose to use the raw grid instead of an undirected graph but that means we need to get only distinct values.
-            List<Cell> valueNeighbors = GetNeighbors(schematic, x, y).Where(cell => cell.Type == CellType.Value)
+            var valueNeighbors = GetNeighbors(schematic, x, y).Where(cell => cell.Type == CellType.Value)
                 .Where(cell =>
                 {
-                    if (!cell.Visited)
+                    if (cell.Visited)
                     {
-                        cell.MarkVisited();
-                        return true;
+                        return false;
                     }
-
-                    return false;
+                    
+                    cell.MarkVisited();
+                    return true;
                 }).ToList();
             
             if (valueNeighbors.Count == 2)
@@ -158,27 +160,27 @@ int Part2(List<string> lines)
     return values.Sum();
 }
 
-var part1 = Part1(lines);
-var part2 = Part2(lines);
+var part1 = Part1(allLines);
+var part2 = Part2(allLines);
 
 Console.WriteLine($"Part 1: {part1}, Part 2: {part2}");
 
 Runner.Benchmark(delegate
 {
-    Part1(lines);
-    Part2(lines);
+    Part1(allLines);
+    Part2(allLines);
 }, "Day 3");
 
-enum CellType
+internal enum CellType
 {
     Empty,
     Value,
     Symbol
 }
 
-class Cell
+internal class Cell
 {
-    public bool Visited { get; set; }
+    public bool Visited { get; private set; }
     public CellType Type { get; }
     public int Value { get; }
     
@@ -188,10 +190,7 @@ class Cell
 
     public List<Cell> LinkedCells
     {
-        set
-        {
-            _linkedCells = value;
-        }
+        set => _linkedCells = value;
     }
 
     public static Cell EmptyCell()
@@ -212,7 +211,7 @@ class Cell
     private Cell(CellType type, List<Cell> linkedCells, int value = 0, string cellChar = "")
     {
         Type = type;
-        LinkedCells = linkedCells;
+        _linkedCells = linkedCells;
         Value = value;
         CellChar = cellChar;
         Visited = false;
