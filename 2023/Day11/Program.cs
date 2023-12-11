@@ -60,14 +60,13 @@ long Part2(bool[,] map, List<string> lines)
 
 var lines = new List<string>(File.ReadAllLines("input.txt"));
 var map = new bool[lines.Count, lines[0].Length];
-//var part1 = Part1(map, lines);
-var part1 = 0;
+var part1 = Part1(map, lines);
 var part2 = Part2(map, lines);
 
 Console.WriteLine($"Part 1: {part1}, Part 2: {part2}");
 
-// Runner.Benchmark(delegate
-// {
-//     Part1(map, lines);
-//     Part2(map, lines);
-// }, "Day 11");
+Runner.Benchmark(delegate
+{
+    Part1(map, lines);
+    Part2(map, lines);
+}, "Day 11");
