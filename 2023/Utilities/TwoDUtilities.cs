@@ -2,6 +2,11 @@ namespace Utilities;
 
 public static class TwoDUtilities
 {
+    public static long ManhattanDistance((long x, long y) pt1, (long x, long y) pt2)
+    {
+        return Math.Abs(pt1.x - pt2.x) + Math.Abs(pt1.y - pt2.y);
+    }
+    
     // TODO: Parameterize
     public static void FloodFill(char[,] map, (long x, long y) startingPoint)
     {

@@ -28,4 +28,19 @@ public static class EnumerableExtensions
             previous = enumerator.Current;
         }
     }
+    
+    public static IEnumerable<TAccumulate> ScanL<TSource, TAccumulate>(
+        this IEnumerable<TSource> source, 
+        TAccumulate seed, 
+        Func<TAccumulate, TSource, TAccumulate> func)
+    {
+        TAccumulate accumulated = seed;
+        yield return accumulated;
+ 
+        foreach (TSource item in source)
+        {
+            accumulated = func(accumulated, item);
+            yield return accumulated;
+        }
+    }
 }
