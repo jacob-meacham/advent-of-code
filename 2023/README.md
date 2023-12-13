@@ -17,3 +17,5 @@ Using this as an excuse to get better at modern C# development.
 | Day 9  | 31.7        |✅     |
 | Day 10 | 3.6         |✅     |
 | Day 11 | 8.6         |✅     |
+| Day 12  | 185.8      |❌     |
+
