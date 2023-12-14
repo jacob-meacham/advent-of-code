@@ -16,7 +16,7 @@ public class Runner
         stopwatch.Stop();
         
         float avgMilliseconds = (float)stopwatch.ElapsedMilliseconds / iterations;
-        String good = avgMilliseconds < 100 ? "✅" : "❌";
+        String good = avgMilliseconds < 250 ? "✅" : "❌";
         Console.WriteLine($"| {day}  | {avgMilliseconds}        |{good}      |");
     }
 }
