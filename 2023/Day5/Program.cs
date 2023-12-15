@@ -18,7 +18,7 @@ using Utilities;
     return (fromName, toName, mappingRanges);
 }
 
-long Part1(List<string> lines)
+long Part1(IEnumerable<string> lines)
 {
     var sections = string.Join("\n", lines).Split("\n\n");
     var types = sections[0].Split(": ")[1].Split(" ").Select(long.Parse).ToList();
@@ -46,7 +46,7 @@ long Part1(List<string> lines)
     return types.Min();
 }
 
-long Part2(List<String> lines)
+long Part2(IEnumerable<string> lines)
 {
     var sections = string.Join("\n", lines).Split("\n\n");
     var rawSeeds = sections[0].Split(": ")[1].Split(" ").Select(long.Parse).ToList();
@@ -97,7 +97,8 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 5");
 
-partial class Program
+// ReSharper disable once UnusedType.Global
+internal partial class Program
 {
     [GeneratedRegex("([a-zA-Z]+)-to-([a-zA-Z]+) map:")]
     private static partial Regex MappingNameRegex();
@@ -105,16 +106,15 @@ partial class Program
 
 internal class Mapping(string to, List<MappingRange> ranges)
 {
-    private readonly List<MappingRange> _ranges = ranges;
     public string To { get; } = to;
 
-    public List<MappingRange> MapRanges(MappingRange range)
+    public IEnumerable<MappingRange> MapRanges(MappingRange range)
     {
         var remainingRange = range;
         var newRanges = new List<MappingRange>();
         
         // ranges are stored in sorted order
-        foreach (var mappedRange in _ranges)
+        foreach (var mappedRange in ranges)
         {
             var (first, rest) = MappingRange.Split(remainingRange, mappedRange.From.Min);
             if (first.Length > 0)
@@ -148,7 +148,7 @@ internal class Mapping(string to, List<MappingRange> ranges)
 
     public long MapValue(long value)
     {
-        return _ranges.Aggregate(value, (acc, n) =>
+        return ranges.Aggregate(value, (acc, n) =>
         {
             if (acc != value)
             {
@@ -156,12 +156,7 @@ internal class Mapping(string to, List<MappingRange> ranges)
                 return acc;
             }
 
-            if (n.IsValueInMapping(value))
-            {
-                return n.GetMappingForValue(value);
-            }
-
-            return acc;
+            return n.IsValueInMapping(value) ? n.GetMappingForValue(value) : acc;
         });
     }
 }
@@ -203,8 +198,8 @@ internal class MappingRange
 
     public static (MappingRange left, MappingRange right) Split(MappingRange original, long splitPoint)
     {
-        long leftLength =  Math.Min(original.Length, Math.Max(0, splitPoint - original.To.Min));
-        long rightLength = original.Length - leftLength;
+        var leftLength =  Math.Min(original.Length, Math.Max(0, splitPoint - original.To.Min));
+        var rightLength = original.Length - leftLength;
         return (new MappingRange(original.To.Min, original.From.Min, leftLength),
                 new MappingRange(original.To.Min + leftLength, original.From.Min + leftLength,
                     rightLength)

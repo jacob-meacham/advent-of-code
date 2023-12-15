@@ -9,10 +9,8 @@ long GetTotalValue(List<string> lines, bool jacksWild)
     }).Order();
     
     // the tuple is (rank, winnings)
-    var result = hands.Aggregate((1L, 0L), (tuple, hand) =>
-    {
-        return (tuple.Item1 + 1, tuple.Item2 + tuple.Item1 * hand.Bid);
-    });
+    var result = hands
+        .Aggregate((1L, 0L), (tuple, hand) => (tuple.Item1 + 1, tuple.Item2 + tuple.Item1 * hand.Bid));
     
     return result.Item2;
 }
@@ -73,25 +71,13 @@ class Hand : IComparable<Hand>
             }
         }
 
-        if (JacksWild)
-        {
-            return GetTypeWild(cardCounts);
-        }
-        
-        return GetTypeNormal(cardCounts);
+        return JacksWild ? GetTypeWild(cardCounts) : GetTypeNormal(cardCounts);
     }
 
     private static HandType GetTypeWild(Dictionary<string, int> cardCounts)
     {
         long numJacks = cardCounts.GetValueOrDefault("J");
-        var counts = new List<int>();
-        foreach (var key in cardCounts.Keys)
-        {
-            if (key != "J")
-            {
-                counts.Add(cardCounts[key]);
-            }
-        }
+        var counts = (from key in cardCounts.Keys where key != "J" select cardCounts[key]).ToList();
 
         counts = counts.OrderByDescending(n => n).ToList();
         var most = counts.ElementAtOrDefault(0) + numJacks;
@@ -129,7 +115,7 @@ class Hand : IComparable<Hand>
         return HandType.HighCard;
     }
 
-    private HandType GetTypeNormal(Dictionary<string, int> cardCounts)
+    private static HandType GetTypeNormal(Dictionary<string, int> cardCounts)
     {
         var countsSet = new HashSet<int>(cardCounts.Values);
         if (countsSet.Contains(5))
@@ -183,11 +169,11 @@ class Hand : IComparable<Hand>
                 return 13;
             case 'Q':
                 return 12;
+            case 'J' when JacksWild:
+            {
+                return 1;
+            }
             case 'J':
-                if (JacksWild)
-                {
-                    return 1;
-                }
                 return 11;
             case 'T':
                 return 10;
@@ -209,15 +195,7 @@ class Hand : IComparable<Hand>
             return typeCompare;
         }
 
-        for (int i = 0; i < Value.Length; i++)
-        {
-            var cardCompare = GetCardValue(Value[i]).CompareTo(GetCardValue(other.Value[i]));
-            if (cardCompare != 0)
-            {
-                return cardCompare;
-            }
-        }
-
-        return 0;
+        return Value.Select((t, i) => GetCardValue(t).CompareTo(GetCardValue(other.Value[i])))
+            .FirstOrDefault(cardCompare => cardCompare != 0);
     }
 }

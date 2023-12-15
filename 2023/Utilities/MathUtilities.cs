@@ -1,6 +1,7 @@
+// ReSharper disable InconsistentNaming
 namespace Utilities;
 
-public class MathUtilities
+public static class MathUtilities
 {
     public static long LCM(IEnumerable<long> numbers)
     {

@@ -29,7 +29,7 @@ long SolveRace(long time, long distance)
     return x2 - x1 + 1L;
 }
 
-long Part1(List<string> lines)
+long Part1(IReadOnlyList<string> lines)
 {
     var races = LineRegex().Matches(lines[0])
         .Select(m => long.Parse(m.Value))
@@ -40,10 +40,10 @@ long Part1(List<string> lines)
         .Aggregate(1L, (acc, n) => acc * n);
 }
 
-long Part2(List<string> lines)
+long Part2(IReadOnlyList<string> lines)
 {
-    long time = long.Parse(string.Join("", lines[0].Split(": ")[1].Split(" ")));
-    long distance = long.Parse(string.Join("", lines[1].Split(": ")[1].Split(" ")));
+    var time = long.Parse(string.Join("", lines[0].Split(": ")[1].Split(" ")));
+    var distance = long.Parse(string.Join("", lines[1].Split(": ")[1].Split(" ")));
     return SolveRace(time, distance);
 }
 
@@ -59,7 +59,8 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 6");
 
-partial class Program
+// ReSharper disable once UnusedType.Global
+internal partial class Program
 {
     [GeneratedRegex(@"\d+")]
     private static partial Regex LineRegex();

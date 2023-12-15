@@ -34,10 +34,10 @@ public static class EnumerableExtensions
         TAccumulate seed, 
         Func<TAccumulate, TSource, TAccumulate> func)
     {
-        TAccumulate accumulated = seed;
+        var accumulated = seed;
         yield return accumulated;
  
-        foreach (TSource item in source)
+        foreach (var item in source)
         {
             accumulated = func(accumulated, item);
             yield return accumulated;

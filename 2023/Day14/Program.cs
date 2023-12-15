@@ -1,6 +1,7 @@
-﻿using System.Text;
-using Utilities;
+﻿using Utilities;
+#pragma warning disable CS8321 // Local function is declared but never used
 
+// TODO: Profile and fix reverse
 void DebugPrint(List<string> lines)
 {
     foreach (var line in lines)
@@ -21,51 +22,63 @@ string TiltLine(string line)
 
 List<string> Rotate(List<string> lines, bool clockwise)
 {
-    var rotated = new List<string>(lines.Count);
-    
     if (clockwise)
     {
-        for (int i = 0; i < lines[0].Length; i++)
-        {
-            var column = new StringBuilder();
-            for (int j = lines.Count - 1; j >= 0; j--)
-            {
-                column.Append(lines[j][i]);
-            }
-            rotated.Add(column.ToString());
-        }
-    }
-    else
-    {
-        for (int i = lines[0].Length - 1; i >= 0; i--)
-        {
-            var column = new StringBuilder();
-            for (int j = 0; j < lines.Count; j++)
-            {
-                column.Append(lines[j][i]);
-            }
-            rotated.Add(column.ToString());
-        }
+        var crotated = Enumerable
+            .Range(0, lines[0].Length)
+            .Select(x => new string(lines.Select(y => y[x]).Reverse().ToArray()));
+
+        return crotated.ToList();
     }
     
-    
-    return rotated;
+    var ccrotated = Enumerable
+        .Range(0, lines[0].Length)
+        .Select(x => new string(lines.Select(y => y[lines[0].Length - x - 1]).ToArray()));
+    return ccrotated.ToList();
 }
 
-List<string> TiltBoard(List<string> lines)
+List<string> Transpose(IReadOnlyList<string> lines)
+{
+    var transposed = Enumerable
+        .Range(0, lines[0].Length)
+        .Select(x => new string(lines.Select(y => y[x]).ToArray()));
+    return transposed.ToList();
+}
+
+List<string> TiltBoard(IEnumerable<string> lines)
 {
     return lines.Select(TiltLine).ToList();
 }
 
-long CalculateLoad(List<string> lines)
+List<string> TiltNorth(IEnumerable<string> lines)
+{
+    return TiltSouth(lines.AsEnumerable().Reverse().ToList()).AsEnumerable().Reverse().ToList();
+}
+
+List<string> TiltEast(IEnumerable<string> lines)
+{
+    return TiltBoard(lines);
+}
+
+List<string> TiltWest(IReadOnlyList<string> lines)
+{
+    return Transpose(TiltNorth(Transpose(lines)));
+}
+
+List<string> TiltSouth(IReadOnlyList<string> lines)
+{
+    return Transpose(TiltEast(Transpose(lines)));
+}
+
+long CalculateLoad(IReadOnlyCollection<string> lines)
 {
     var len = lines.Count;
     return lines.Select((s, i) => s.Count(c => c == 'O') * (len-i)).Sum();
 }
 
-long Part1(List<string> lines)
+long Part1(IEnumerable<string> lines)
 {
-    var rolled = Rotate(TiltBoard(Rotate(lines, true)), false);
+    var rolled = TiltNorth(lines);
     return CalculateLoad(rolled);
 }
 
@@ -74,13 +87,14 @@ long Part2(List<string> lines)
     // Collect the index of all previous states until we find a cycle
     var previousStates = new Dictionary<string, long>();
     var period = 0L;
-    var start = 0L;
+    long start;
     while (true)
     {
-        for (var _ = 0; _ < 4; _++)
-        {
-            lines = TiltBoard(Rotate(lines, true));
-        }
+        lines = TiltEast(TiltSouth(TiltWest(TiltNorth(lines))));
+        // for (var _ = 0; _ < 4; _++)
+        // {
+        //     lines = TiltBoard(Rotate(lines, true));
+        // }
         
         var currentState = string.Join('\n', lines);
         if (!previousStates.TryAdd(currentState, period))
@@ -99,7 +113,7 @@ long Part2(List<string> lines)
         cycle[key] = value;
     }
 
-    var totalTime = 1000000000;
+    const int totalTime = 1000000000;
     var cycleIndex = start + (totalTime - start) % period - 1;
     var finalState = cycle[cycleIndex];
     

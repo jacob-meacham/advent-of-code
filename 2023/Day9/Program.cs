@@ -1,6 +1,6 @@
 ﻿using Utilities;
 
-List<IEnumerable<long>> GetSequences(IEnumerable<long> sequence)
+IEnumerable<IEnumerable<long>> GetSequences(IEnumerable<long> sequence)
 {
     var sequences = new List<IEnumerable<long>>();
     sequences.Add(sequence);
@@ -22,28 +22,16 @@ long GetNextInSequence(IEnumerable<long> sequence)
 {
     var sequences = GetSequences(sequence);
 
-    List<long> lasts = sequences.Select(l => l.Last()).Reverse().ToList();
-    var toAdd = 0L;
-    foreach (var l in lasts.Skip(1))
-    {
-        toAdd = l + toAdd;
-    }
-    
-    return toAdd;
+    var lasts = sequences.Select(l => l.Last()).Reverse();
+    return lasts.Skip(1).Aggregate(0L, (current, l) => l + current);
 }
 
 long GetPreviousInSequence(IEnumerable<long> sequence)
 {
     var sequences = GetSequences(sequence);
 
-    List<long> firsts = sequences.Select(l => l.First()).Reverse().ToList();
-    var toAdd = 0L;
-    foreach (var l in firsts.Skip(1))
-    {
-        toAdd = l - toAdd;
-    }
-    
-    return toAdd;
+    var firsts = sequences.Select(l => l.First()).Reverse();
+    return firsts.Skip(1).Aggregate(0L, (current, l) => l - current);
 }
 
 long Part1(List<string> lines)
@@ -59,12 +47,8 @@ long Part1(List<string> lines)
 
 long Part2(List<string> lines)
 {
-    var values = new List<long>();
-    foreach (var l in lines)
-    {
-        var next = GetPreviousInSequence(l.Split(" ").Select(long.Parse));
-        values.Add(next);
-    }
+    var values = lines
+        .Select(l => GetPreviousInSequence(l.Split(" ").Select(long.Parse))).ToList();
     return values.Sum();
 }
 

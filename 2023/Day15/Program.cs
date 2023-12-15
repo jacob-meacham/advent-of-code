@@ -5,14 +5,14 @@ static long Hash(string s)
     return s.ToCharArray().Aggregate(0L, (l, c) => (l + c) * 17 % 256);
 }
 
-long Part1(List<string> lines)
+long Part1(IReadOnlyList<string> lines)
 {
     var sum = lines[0].Split(",")
         .Select(Hash).Sum();
     return sum;
 }
 
-long Part2(List<string> lines)
+long Part2(IReadOnlyList<string> lines)
 {
     var hashMap = new FixedSizeHashMap<string, long>(256, Hash);
     foreach (var line in lines[0].Split(","))
@@ -48,7 +48,7 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 15");
 
-public class FixedSizeHashMap<TKey, TValue>(int size, Func<TKey, long> hashFn)
+internal class FixedSizeHashMap<TKey, TValue>(int size, Func<TKey, long> hashFn)
 {
     LinkedList<(TKey key, TValue value)>?[] Data { get; } = new LinkedList<(TKey key, TValue value)>[size];
 
@@ -81,26 +81,24 @@ public class FixedSizeHashMap<TKey, TValue>(int size, Func<TKey, long> hashFn)
         }
     }
     
-    public bool Remove(TKey key)
+    public void Remove(TKey key)
     {
         var bucket = hashFn(key);
         if (Data[bucket] == null)
         {
-            return false;
+            return;
         }
         
         var currentNode = FindByKey(Data[bucket]!, key);
         if (currentNode == null)
         {
-            return false;
+            return;
         }
         
         Data[bucket]?.Remove(currentNode);
-        return true;
-
     }
 
-    private LinkedListNode<(TKey key, TValue value)>? FindByKey(LinkedList<(TKey key, TValue value)> list, TKey key)
+    private static LinkedListNode<(TKey key, TValue value)>? FindByKey(LinkedList<(TKey key, TValue value)> list, TKey key)
     {
         var currentNode = list.First;
         while (currentNode != null)

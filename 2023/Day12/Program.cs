@@ -2,15 +2,15 @@
 
 bool CouldBeBroken(char symbol)
 {
-    return symbol == '#' || symbol == '?';
+    return symbol is '#' or '?';
 }
 
 bool CouldBeWorking(char symbol)
 {
-    return symbol == '.' || symbol == '?';
+    return symbol is '.' or '?';
 }
 
-long Solve(string arrangement, int[] springs)
+long Solve(string arrangement, IReadOnlyList<int> springs)
 {
     // Uses an NFA for solving (thanks for Reddit for the inspo!)
     // NFA stores 4 pieces of state:
@@ -21,25 +21,20 @@ long Solve(string arrangement, int[] springs)
 
     var numPossible = 0L;
     
-    var currentStates = new Dictionary<State, long>();
-    var newStates = new Dictionary<State, long>();
-
-    //var loop = 0;
+    var currentStates = new Dictionary<State, long>(32);
+    var newStates = new Dictionary<State, long>(32);
+    
     currentStates.Add(new State(0, 0, 0, false), 1);
     while (currentStates.Count > 0)
     {
-        // loop++;
-        // Console.WriteLine($"Step {loop}");
-        
         // Check and progress all state simultaneously by ingesting the next input symbol
         foreach (var state in currentStates.Keys)
         {
-            long numStates = currentStates[state];
-            // Console.WriteLine($"{new string(state.DebugArrangement)} - {numStates}");
+            var numStates = currentStates[state];
             
             if (state.ArrangePos == arrangement.Length)
             {
-                if (state.SpringGroup == springs.Length)
+                if (state.SpringGroup == springs.Count)
                 {
                     // Found possible positions in these states - we've placed all springs
                     numPossible += numStates;
@@ -50,53 +45,45 @@ long Solve(string arrangement, int[] springs)
             }
 
             var inputSymbol = arrangement[state.ArrangePos];
-            if (CouldBeBroken(inputSymbol) && state.SpringGroup < springs.Length && !state.NeedSpace)
+            if (CouldBeBroken(inputSymbol) && state.SpringGroup < springs.Count && !state.NeedSpace)
             {
                 // Next symbol could be a spring, and we have not started a spring group so this could be a working spring
-                if (inputSymbol == '?' && state.CurSprings == 0)
+                if (inputSymbol is '?' && state.CurSprings is 0)
                 {
-                    // var newArrangement = state.DebugArrangement;
-                    // newArrangement[state.ArrangePos] = '.';
                     newStates.ApplyWithDefault(new State(
                         state.ArrangePos + 1,
                         state.SpringGroup,
                         state.CurSprings, 
-                        false), (v) => v + numStates);
+                        false), (v) => v + numStates, 0);
                 }
 
                 if (state.CurSprings + 1 == springs[state.SpringGroup])
                 {
                     // spring group can fit in these states
-                    // var newArrangement = state.DebugArrangement;
-                    // newArrangement[state.ArrangePos] = '#';
                     newStates.ApplyWithDefault(new State(
                         state.ArrangePos + 1,
                         state.SpringGroup + 1,
                         0,
-                        true), (v) => v + numStates);
+                        true), (v) => v + numStates, 0);
                 }
                 else
                 {
-                    // var newArrangement = state.DebugArrangement;
-                    // newArrangement[state.ArrangePos] = '#';
                     newStates.ApplyWithDefault(new State(
                         state.ArrangePos + 1,
                         state.SpringGroup,
                         state.CurSprings + 1,
-                        false), (v) => v + numStates);
+                        false), (v) => v + numStates, 0);
                 }
             }
 
             else if (CouldBeWorking(inputSymbol) && state.CurSprings == 0)
             {
                 // Found a working spring
-                // var newArrangement = state.DebugArrangement;
-                // newArrangement[state.ArrangePos] = '.';
                 newStates.ApplyWithDefault(new State(
                     state.ArrangePos + 1,
                     state.SpringGroup,
                     state.CurSprings,
-                    false), (v) => v + numStates);
+                    false), (v) => v + numStates, 0);
             }
         }
         
@@ -108,27 +95,24 @@ long Solve(string arrangement, int[] springs)
     return numPossible;
 }
 
-long Part1(List<string> lines)
+long Part1(IEnumerable<string> lines)
 {
     var input = new List<(string, int[])>();
-    foreach (var l in lines)
+    foreach (var split in lines.Select(l => l.Split(" ")))
     {
-        var split = l.Split(" ");
         input.Add((split[0], split[1].Split(",").Select(int.Parse).ToArray()));
     }
     
     return input.Select(t => Solve(t.Item1, t.Item2)).Sum();
 }
 
-long Part2(List<string> lines)
+long Part2(IEnumerable<string> lines)
 {
     var input = new List<(string, int[])>();
-    foreach (var l in lines)
+    foreach (var split in lines.Select(l => l.Split(" ")))
     {
-        var split = l.Split(" ");
-        int[] a;
-        string arrangement = string.Join("?", Enumerable.Repeat(split[0], 5));
-        string springStr = string.Join(",", Enumerable.Repeat(split[1], 5));
+        var arrangement = string.Join("?", Enumerable.Repeat(split[0], 5));
+        var springStr = string.Join(",", Enumerable.Repeat(split[1], 5));
         input.Add((arrangement, springStr.Split(",").Select(int.Parse).ToArray()));
     }
     
@@ -147,16 +131,15 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 12");
 
-class State(int arrangePos, int springGroup, int curSprings, bool needSpace)
+// I tried using a record here instead, but it was quite a bit slower
+internal class State(int arrangePos, int springGroup, int curSprings, bool needSpace)
 {
     public int ArrangePos { get; } = arrangePos;
     public int SpringGroup { get; } = springGroup;
     public int CurSprings { get; } = curSprings;
     public bool NeedSpace { get; } = needSpace;
-    
-    //public char[] DebugArrangement { get; } = debugArrangement;
 
-    protected bool Equals(State other)
+    private bool Equals(State other)
     {
         return ArrangePos == other.ArrangePos && SpringGroup == other.SpringGroup && CurSprings == other.CurSprings && NeedSpace == other.NeedSpace;
     }

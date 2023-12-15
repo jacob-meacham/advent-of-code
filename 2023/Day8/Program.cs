@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Utilities;
 
-long GetPathLengthToNode(Node node, string value, IEnumerable<char> rules)
+long GetPathLengthToNode(Node? node, string value, IEnumerable<char> rules)
 {
     long steps = 0;
     foreach (var d in rules)
@@ -10,7 +10,8 @@ long GetPathLengthToNode(Node node, string value, IEnumerable<char> rules)
         node = d switch
         {
             'L' => node?.Left,
-            'R' => node?.Right
+            'R' => node?.Right,
+            _ => throw new ArgumentOutOfRangeException(nameof(node))
         };
 
         if (node?.Value.EndsWith(value) ?? false)
@@ -37,16 +38,11 @@ long Part1(IReadOnlyList<string> lines)
 long Part2(IReadOnlyList<string> lines)
 {
     var graph = new Graph();
-    var startingNodes = new List<Node>();
-    foreach (var l in lines.Skip(2))
-    {
-        Node node = ParseNodeLine(graph, l);
-        if (node.Value.EndsWith('A'))
-        {
-            startingNodes.Add(node);
-        }
-    }
-    
+    var startingNodes = lines.Skip(2)
+        .Select(l => ParseNodeLine(graph, l))
+        .Where(node => node.Value.EndsWith('A'))
+        .ToList();
+
     var pathLengths = startingNodes.Select(n =>
     {
         var rules = lines[0].ToCharArray().Cycle();
@@ -68,6 +64,7 @@ Runner.Benchmark(delegate
     Part1(lines);
     Part2(lines);
 }, "Day 8");
+return;
 
 Node ParseNodeLine(Graph graph, string l)
 {

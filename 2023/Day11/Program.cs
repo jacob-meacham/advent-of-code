@@ -1,13 +1,13 @@
 ﻿using Utilities;
 
-long Solve(bool[,] map, List<string> lines, long totalExpansion)
+long Solve(bool[,] map, IReadOnlyList<string> lines, long totalExpansion)
 {
     var emptyRows = Enumerable.Repeat(totalExpansion, map.GetLength(0)).ToList();
     var emptyCols = Enumerable.Repeat(totalExpansion, map.GetLength(1)).ToList();
-    for (int x = 0; x < lines.Count; x++)
+    for (var x = 0; x < lines.Count; x++)
     {
         var line = lines[x].ToCharArray();
-        for (int y = 0; y < line.Length; y++)
+        for (var y = 0; y < line.Length; y++)
         {
             if (line[y] == '#')
             {
@@ -26,9 +26,9 @@ long Solve(bool[,] map, List<string> lines, long totalExpansion)
     emptyRows = emptyRows.ScanL(0L, (acc, n) => acc + n).ToList();
     emptyCols = emptyCols.ScanL(0L, (acc, n) => acc + n).ToList();
     var galaxyLocations = new List<(long x, long y)>();
-    for (int x = 0; x < map.GetLength(0); x++)
+    for (var x = 0; x < map.GetLength(0); x++)
     {
-        for (int y = 0; y < map.GetLength(1); y++)
+        for (var y = 0; y < map.GetLength(1); y++)
         {
             if (map[x, y])
             {
@@ -48,12 +48,12 @@ long Solve(bool[,] map, List<string> lines, long totalExpansion)
     return totalSum;
 }
 
-long Part1(bool[,] map, List<string> lines)
+long Part1(bool[,] map, IReadOnlyList<string> lines)
 {
     return Solve(map, lines, 1);
 }
 
-long Part2(bool[,] map, List<string> lines)
+long Part2(bool[,] map, IReadOnlyList<string> lines)
 {
     return Solve(map, lines, 1000000-1);
 }

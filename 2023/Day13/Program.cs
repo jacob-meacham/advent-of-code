@@ -1,6 +1,6 @@
 ﻿using Utilities;
 
-IEnumerable<Grid> ParseGrids(List<string> lines)
+IEnumerable<Grid> ParseGrids(IEnumerable<string> lines)
 {
     var grids = string.Join("\n", lines)
         .Split("\n\n")
@@ -19,22 +19,22 @@ Grid ParseGrid(string[] gridLines)
     var cols = new List<long>();
     
     // There is probably a fancier way to do this that doesn't require two passes
-    for (int i = 0; i < gridLines.Length; i++)
+    foreach (var gridLine in gridLines)
     {
         long row = 0;
-        for (int j = 0; j < gridLines[0].Length; j++)
+        for (var j = 0; j < gridLines[0].Length; j++)
         {
-            row = (row << 1) + (gridLines[i][j] == '#' ? 1 : 0);
+            row = (row << 1) + (gridLine[j] == '#' ? 1 : 0);
         }
         rows.Add(row);
     }
     
-    for (int j = 0; j < gridLines[0].Length; j++)
+    for (var j = 0; j < gridLines[0].Length; j++)
     {
         long col = 0;
-        for (int i = 0; i < gridLines.Length; i++)
+        foreach (var gridLine in gridLines)
         {
-            col = (col << 1) + (gridLines[i][j] == '#' ? 1 : 0);
+            col = (col << 1) + (gridLine[j] == '#' ? 1 : 0);
         }
         cols.Add(col);
     }
@@ -70,23 +70,23 @@ long FindReflection(List<long> input, long allowedDifferences)
 
 long GetReflectionScore(Grid grid, long allowedDifferences)
 {
-    long verticalReflection = FindReflection(grid.Columns, allowedDifferences);
+    var verticalReflection = FindReflection(grid.Columns, allowedDifferences);
     if (verticalReflection > 0)
     {
         return verticalReflection;
     }
 
-    long horizontalReflection = FindReflection(grid.Rows, allowedDifferences);
+    var horizontalReflection = FindReflection(grid.Rows, allowedDifferences);
     return 100 * horizontalReflection;
 }
 
-long Part1(List<string> lines)
+long Part1(IEnumerable<string> lines)
 {
     var grids = ParseGrids(lines);
     return grids.Select(g => GetReflectionScore(g, 0)).Sum();
 }
 
-long Part2(List<string> lines)
+long Part2(IEnumerable<string> lines)
 {
     var grids = ParseGrids(lines);
     return grids.Select(g => GetReflectionScore(g, 1)).Sum();
@@ -104,7 +104,7 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 13");
 
-public class Grid(List<long> rows, List<long> cols)
+internal class Grid(List<long> rows, List<long> cols)
 {
     public List<long> Rows { get; } = rows;
     public List<long> Columns { get; } = cols;
