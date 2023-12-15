@@ -20,6 +20,7 @@ public static class Runner
         
         var avgMilliseconds = (float)stopwatch.ElapsedMilliseconds / iterations;
         var good = avgMilliseconds < 250 ? "✅" : "❌";
-        Console.WriteLine($"| {day}{NumSpaces(day, 7)}| {avgMilliseconds}{NumSpaces(avgMilliseconds.ToString(CultureInfo.InvariantCulture), 12)}|{good}     |");
+        var timingString = avgMilliseconds.ToString("F1");
+        Console.WriteLine($"| {day}{NumSpaces(day, 7)}| {timingString}{NumSpaces(timingString, 12)}|{good}     |");
     }
 }
