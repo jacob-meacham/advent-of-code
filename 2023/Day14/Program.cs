@@ -1,4 +1,5 @@
-﻿using Utilities;
+﻿using System.Text;
+using Utilities;
 #pragma warning disable CS8321 // Local function is declared but never used
 
 // TODO: Profile and fix reverse
@@ -14,10 +15,32 @@ string TiltLine(string line)
 {
     // You can think of each row or column as n stops (either the end of the string or a #)
     // which means we can just use sort to sort the rocks after splitting into our stops
-    return string.Join("#", line.Split("#").Select(l =>
+    
+    // Initial more elegant but slower code
+    // return string.Join("#", line.Split("#").Select(l =>
+    // {
+    //     int stones = l.Count(c => c == 'O');
+    //     return new string('.', l.Length - stones) + new string('O', stones);
+    // }));
+    
+    var builder = new StringBuilder();
+
+    var parts = line.Split('#');
+    for (int i = 0; i < parts.Length; i++)
     {
-        return new string(l.OrderBy(c => c == 'O' ? 1 : 0).ToArray());
-    }));
+        if (i > 0)
+        {
+            builder.Append('#');
+        }
+
+        var part = parts[i];
+        int stones = part.Count(c => c == 'O');
+
+        builder.Append('.', part.Length - stones).Append('O', stones);
+    }
+
+    var joined = builder.ToString();
+    return joined;
 }
 
 List<string> Rotate(List<string> lines, bool clockwise)
@@ -27,7 +50,6 @@ List<string> Rotate(List<string> lines, bool clockwise)
         var crotated = Enumerable
             .Range(0, lines[0].Length)
             .Select(x => new string(lines.Select(y => y[x]).Reverse().ToArray()));
-
         return crotated.ToList();
     }
     
@@ -45,6 +67,11 @@ List<string> Transpose(IReadOnlyList<string> lines)
     return transposed.ToList();
 }
 
+List<string> Reverse(IEnumerable<string> lines)
+{
+    return lines.Reverse().ToList();
+}
+
 List<string> TiltBoard(IEnumerable<string> lines)
 {
     return lines.Select(TiltLine).ToList();
@@ -52,7 +79,7 @@ List<string> TiltBoard(IEnumerable<string> lines)
 
 List<string> TiltNorth(IEnumerable<string> lines)
 {
-    return TiltSouth(lines.AsEnumerable().Reverse().ToList()).AsEnumerable().Reverse().ToList();
+    return Reverse(TiltSouth(Reverse(lines)));
 }
 
 List<string> TiltEast(IEnumerable<string> lines)
@@ -90,11 +117,11 @@ long Part2(List<string> lines)
     long start;
     while (true)
     {
-        lines = TiltEast(TiltSouth(TiltWest(TiltNorth(lines))));
-        // for (var _ = 0; _ < 4; _++)
-        // {
-        //     lines = TiltBoard(Rotate(lines, true));
-        // }
+        //lines = TiltEast(TiltSouth(TiltWest(TiltNorth(lines))));
+        for (var _ = 0; _ < 4; _++)
+        {
+            lines = TiltBoard(Rotate(lines, true));
+        }
         
         var currentState = string.Join('\n', lines);
         if (!previousStates.TryAdd(currentState, period))

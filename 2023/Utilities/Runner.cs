@@ -19,7 +19,7 @@ public static class Runner
         stopwatch.Stop();
         
         var avgMilliseconds = (float)stopwatch.ElapsedMilliseconds / iterations;
-        var good = avgMilliseconds < 250 ? "✅" : "❌";
+        var good = avgMilliseconds < 100 ? "✅" : "❌";
         var timingString = avgMilliseconds.ToString("F1");
         Console.WriteLine($"| {day}{NumSpaces(day, 7)}| {timingString}{NumSpaces(timingString, 12)}|{good}     |");
     }
