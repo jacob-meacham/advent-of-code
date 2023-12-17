@@ -7,7 +7,7 @@ Using this as an excuse to get better at modern C# development.
 Looking to run in <250ms
 
 | Day    | Timing (ms) | Good? |
-|--------|-------------| ----  |
+|--------|-------------|-------|
 | Day 1  | 2.8         |✅     |
 | Day 2  | 4.1         |✅     |
 | Day 3  | 2.7         |✅     |
