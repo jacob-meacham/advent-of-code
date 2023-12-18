@@ -1,4 +1,5 @@
 ﻿using Utilities;
+using Vec2 = Utilities.TwoDUtilities.Vec2;
 
 void DebugPrint(Cell[,] grid, Vec2 initialPos)
 {
@@ -173,19 +174,6 @@ Runner.Benchmark(delegate
     Part1(lines);
     Part2(lines);
 }, "Day 16");
-
-internal record Vec2(long X, long Y)
-{
-    public static Vec2 operator +(Vec2 a, Vec2 b)
-    {
-        return new Vec2(a.X + b.X, a.Y + b.Y);
-    }
-    
-    public static Vec2 operator -(Vec2 a, Vec2 b)
-    {
-        return new Vec2(a.X - b.X, a.Y - b.Y);
-    }
-}
 
 [Flags]
 internal enum Direction
