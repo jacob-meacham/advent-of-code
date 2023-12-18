@@ -145,18 +145,20 @@ long Part2(char[,] map, IReadOnlyList<string> lines)
             {
                 lineParity += 1;
             }
-            
-            if (map[x, y] == '.')
+
+            if (map[x, y] != '.')
             {
-                if (lineParity % 2 != 0)
-                {
-                    area++;
-                    map[x, y] = 'I';
-                }
-                else
-                {
-                    map[x, y] = 'O';
-                }
+                continue;
+            }
+            
+            if (lineParity % 2 != 0)
+            {
+                area++;
+                map[x, y] = 'I';
+            }
+            else
+            {
+                map[x, y] = 'O';
             }
         }
     }

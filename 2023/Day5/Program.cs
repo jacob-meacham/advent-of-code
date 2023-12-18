@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Utilities;
 
-(string From, string To, List<MappingRange> Mappings) ParseMappings(string[] lines)
+(string From, string To, List<MappingRange> Mappings) ParseMappings(IReadOnlyList<string> lines)
 {
     var match = MappingNameRegex().Matches(lines[0])[0];
     var fromName = match.Groups[1].Value;

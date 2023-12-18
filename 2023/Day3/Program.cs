@@ -16,10 +16,10 @@ List<Cell> GetNeighbors(Cell[,] cells, int x, int y)
     };
 }
 
-(int Value, int Length) ParseValue(char[] line, int pos)
+(int Value, int Length) ParseValue(IReadOnlyList<char> line, int pos)
 {
     var valueBuilder = new StringBuilder();
-    while (pos < line.Length && Char.IsDigit(line[pos]))
+    while (pos < line.Count && char.IsDigit(line[pos]))
     {
         valueBuilder.Append(line[pos++]);
     }
@@ -29,14 +29,10 @@ List<Cell> GetNeighbors(Cell[,] cells, int x, int y)
 void SetValueCells(Cell[,] schematic, int x, int y, int value, int length)
 {
     // Create the cells
-    var cells = new List<Cell>();
-    for (int i = 0; i < length; i++)
-    {
-        cells.Add(Cell.ValueCell(value));
-    }
+    var cells = Enumerable.Range(0, length).Select(_ => Cell.ValueCell(value)).ToList();
     
     // Link the cells
-    for (int i = 0; i < length; i++)
+    for (var i = 0; i < length; i++)
     {
         cells[i].LinkedCells = cells;
         schematic[x, y + i] = cells[i];
@@ -45,7 +41,7 @@ void SetValueCells(Cell[,] schematic, int x, int y, int value, int length)
 
 void FillRow(Cell[,] schematic, int row, Cell value)
 {
-    for (int y = 0; y < schematic.GetLength(1); y++)
+    for (var y = 0; y < schematic.GetLength(1); y++)
     {
         schematic[row,y] = value;
     }
@@ -56,14 +52,14 @@ void Parse(Cell[,] schematic, List<string> lines)
     // Fill our first and last row with empties to make bounds checks simpler
     FillRow(schematic, 0, Cell.EmptyCell());
     FillRow(schematic, lines.Count + 1, Cell.EmptyCell());
-    for(int x = 0; x < lines.Count; x++)
+    for(var x = 0; x < lines.Count; x++)
     {
         // First and last column are empty to make bounds checks simpler
         schematic[x+1, 0] = Cell.EmptyCell();
         schematic[x+1, schematic.GetLength(1)-1] = Cell.EmptyCell();
         var line = lines[x].ToCharArray();
     
-        int y = 0;
+        var y = 0;
         while (y < line.Length)
         {
             if (line[y] == '.')
@@ -107,13 +103,8 @@ int Part1(List<string> lines)
             
             // Check for unvisited values in all directions
             var valueNeighbors = GetNeighbors(schematic, x, y).Where(cell => cell.Type == CellType.Value).ToList();
-            foreach (var cell in valueNeighbors)
+            foreach (var cell in valueNeighbors.Where(cell => !cell.Visited))
             {
-                if (cell.Visited)
-                {
-                    continue;
-                }
-                
                 values.Add(cell.Value);
                 cell.MarkVisited();
             }
@@ -217,11 +208,11 @@ internal class Cell
         Visited = false;
     }
     
-    public bool MarkVisited()
+    public void MarkVisited()
     {
         if (Visited)
         {
-            return false;
+            return;
         }
         
         Visited = true;
@@ -229,6 +220,5 @@ internal class Cell
         {
             cell.Visited = true;
         }
-        return true;
     }
 }

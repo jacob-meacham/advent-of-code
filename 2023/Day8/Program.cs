@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using Utilities;
 
 long GetPathLengthToNode(Node? node, string value, IEnumerable<char> rules)
@@ -111,6 +112,7 @@ internal class Node(string value)
     public string Value { get; } = value;
 }
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 internal partial class Program
 {
     [GeneratedRegex(@"([A-Z]{3}) = \(([A-Z]{3}), ([A-Z]{3})\)")]

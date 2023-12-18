@@ -35,7 +35,6 @@ var part2 = Part2(lines);
 
 Console.WriteLine($"Part 1: {part1}, Part 2: {part2}");
 
-// TODO: Some way of doing this for all of them
 Runner.Benchmark(delegate
 {
     Part1(lines);

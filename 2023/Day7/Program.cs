@@ -48,7 +48,7 @@ internal enum HandType
     FiveOfAKind
 }
 
-class Hand : IComparable<Hand>
+internal class Hand : IComparable<Hand>
 {
     private HandType Type { get; }
     private string Value { get; }
@@ -82,37 +82,16 @@ class Hand : IComparable<Hand>
         counts = counts.OrderByDescending(n => n).ToList();
         var most = counts.ElementAtOrDefault(0) + numJacks;
 
-        if (most == 5)
+        return most switch
         {
-            return HandType.FiveOfAKind;
-        }
-        
-        if (most == 4)
-        {
-            return HandType.FourOfAKind;
-        }
-        
-        if (most == 3 && counts.Skip(1).Contains(2))
-        {
-            return HandType.FullHouse;
-        }
-        
-        if (most == 3)
-        {
-            return HandType.ThreeOfAKind;
-        }
-        
-        if (most == 2 && counts.Skip(1).Contains(2))
-        {
-            return HandType.TwoPair;
-        }
-        
-        if (most == 2)
-        {
-            return HandType.Pair;
-        }
-        
-        return HandType.HighCard;
+            5 => HandType.FiveOfAKind,
+            4 => HandType.FourOfAKind,
+            3 when counts.Skip(1).Contains(2) => HandType.FullHouse,
+            3 => HandType.ThreeOfAKind,
+            2 when counts.Skip(1).Contains(2) => HandType.TwoPair,
+            2 => HandType.Pair,
+            _ => HandType.HighCard
+        };
     }
 
     private static HandType GetTypeNormal(Dictionary<string, int> cardCounts)
@@ -161,25 +140,16 @@ class Hand : IComparable<Hand>
     
     private long GetCardValue(char card)
     {
-        switch (card)
+        return card switch
         {
-            case 'A':
-                return 14;
-            case 'K':
-                return 13;
-            case 'Q':
-                return 12;
-            case 'J' when JacksWild:
-            {
-                return 1;
-            }
-            case 'J':
-                return 11;
-            case 'T':
-                return 10;
-            default:
-                return long.Parse(card.ToString());
-        }
+            'A' => 14,
+            'K' => 13,
+            'Q' => 12,
+            'J' when JacksWild => 1,
+            'J' => 11,
+            'T' => 10,
+            _ => long.Parse(card.ToString())
+        };
     }
     
     public int CompareTo(Hand? other)

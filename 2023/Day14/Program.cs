@@ -2,7 +2,6 @@
 using Utilities;
 #pragma warning disable CS8321 // Local function is declared but never used
 
-// TODO: Profile and fix reverse
 void DebugPrint(List<string> lines)
 {
     foreach (var line in lines)
@@ -43,7 +42,7 @@ string TiltLine(string line)
     return joined;
 }
 
-List<string> Rotate(List<string> lines, bool clockwise)
+IEnumerable<string> Rotate(IReadOnlyList<string> lines, bool clockwise)
 {
     if (clockwise)
     {

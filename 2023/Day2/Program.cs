@@ -1,5 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using Utilities;
+// ReSharper disable UnusedType.Global
 
 bool IsDrawPossible(Draw draw, Draw maxDraw)
 {
@@ -97,10 +99,11 @@ Runner.Benchmark(delegate
     Part2(lines);
 }, "Day 2");
 
-partial class Program
+internal partial class Program
 {    
     [GeneratedRegex(@"Game (\d+): (.*)")]
-    public static partial Regex LineRegex();
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    internal static partial Regex LineRegex();
 }
 
 internal class Draw(int red, int green, int blue)

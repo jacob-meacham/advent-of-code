@@ -1,15 +1,16 @@
-﻿using Utilities;
+﻿using System.Diagnostics.CodeAnalysis;
+using Utilities;
 
+[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 IEnumerable<IEnumerable<long>> GetSequences(IEnumerable<long> sequence)
 {
-    var sequences = new List<IEnumerable<long>>();
-    sequences.Add(sequence);
+    var sequences = new List<IEnumerable<long>> { sequence };
     while (true)
     {
         sequence = sequence.Pairwise().Select(tuple => tuple.Item2 - tuple.Item1);
         sequences.Add(sequence);
 
-        if (sequence.Count(l => l != 0) == 0)
+        if (sequence.All(l => l == 0))
         {
             break;
         }
@@ -34,18 +35,14 @@ long GetPreviousInSequence(IEnumerable<long> sequence)
     return firsts.Skip(1).Aggregate(0L, (current, l) => l - current);
 }
 
-long Part1(List<string> lines)
+long Part1(IEnumerable<string> lines)
 {
-    var values = new List<long>();
-    foreach (var l in lines)
-    {
-        var next = GetNextInSequence(l.Split(" ").Select(long.Parse));
-        values.Add(next);
-    }
+    var values = lines
+        .Select(l => GetNextInSequence(l.Split(" ").Select(long.Parse))).ToList();
     return values.Sum();
 }
 
-long Part2(List<string> lines)
+long Part2(IEnumerable<string> lines)
 {
     var values = lines
         .Select(l => GetPreviousInSequence(l.Split(" ").Select(long.Parse))).ToList();

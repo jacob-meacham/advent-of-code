@@ -5,15 +5,14 @@ long SolveRace(long time, long distance)
 {
     // Quadratic equation of the form (time-x)(x) = distance
     // -x2+time-distance = 0
-    var a = -1L;
-    var b = time;
+    const long a = -1L;
     var c = -distance;
         
     // Assuming well-formed input
-    double discriminant = b * b - 4 * a * c;
+    double discriminant = time * time - 4 * a * c;
     double sqrtDiscriminant = Math.Sqrt(discriminant);
-    var x1 = (long)Math.Ceiling((-b + sqrtDiscriminant) / (2 * a));
-    var x2 = (long)Math.Floor((-b - sqrtDiscriminant) / (2 * a));
+    var x1 = (long)Math.Ceiling((-time + sqrtDiscriminant) / (2 * a));
+    var x2 = (long)Math.Floor((-time - sqrtDiscriminant) / (2 * a));
 
     // Need to best the time
     if ((time - x1) * x1 <= distance)
