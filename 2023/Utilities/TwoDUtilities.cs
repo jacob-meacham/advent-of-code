@@ -2,11 +2,29 @@ namespace Utilities;
 
 public static class TwoDUtilities
 {
-    public record Vec2(long X = 0, long Y = 0)
+    public record Vec2(long X, long Y)
     {
+        public long X { get; set; } = X;
+        public long Y { get; set; } = Y;
+        
+        public static readonly Vec2 North = new(-1, 0);
+        public static readonly Vec2 South = new(1, 0);
+        public static readonly Vec2 East = new(0, 1);
+        public static readonly Vec2 West = new(0, -1);
+        
         public static Vec2 operator +(Vec2 a, Vec2 b)
         {
             return new Vec2(a.X + b.X, a.Y + b.Y);
+        }
+        
+        public static Vec2 operator +(Vec2 a, (long x, long y) b)
+        {
+            return new Vec2(a.X + b.x, a.Y + b.y);
+        }
+        
+        public static Vec2 operator *(Vec2 a, long b)
+        {
+            return new Vec2(a.X * b, a.Y * b);
         }
     
         public static Vec2 operator -(Vec2 a, Vec2 b)
@@ -17,7 +35,7 @@ public static class TwoDUtilities
 
     public class Grid<TCell>(TCell[,] cells)
     {
-        public TCell[,] Cells { get; } = cells;
+        public TCell?[,] Cells { get; } = cells;
 
         public int MaxRows => Cells.GetLength(0) - 1;
         public int MaxCols => Cells.GetLength(1) - 1;
@@ -37,15 +55,31 @@ public static class TwoDUtilities
 
             return new Grid<TCell>(cells);
         }
+        
+        public IEnumerable<(TCell? cell, long x, long y)> GetCells()
+        {
+            for (var x = 0; x <= MaxRows; x++)
+            {
+                for (var y = 0; y <= MaxCols; y++)
+                {
+                    yield return (Cells[x, y], x, y);
+                }
+            }
+        }
 
         public bool Contains(Vec2 pos)
         {
             return pos.X >= 0 && pos.X < Cells.GetLength(0) && pos.Y >= 0 && pos.Y < Cells.GetLength(1);
         }
 
-        public ref TCell Get(Vec2 pos)
+        public ref TCell? Get(Vec2 pos)
         {
             return ref Cells[pos.X, pos.Y];
+        }
+        
+        public ref TCell? Get((long x, long y) pos)
+        {
+            return ref Cells[pos.x, pos.y];
         }
     }
     

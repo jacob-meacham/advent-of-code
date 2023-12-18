@@ -11,6 +11,7 @@ public static class EnumerableExtensions
                 yield return element;
             }
         }
+        // ReSharper disable once IteratorNeverReturns
     }
     
     public static IEnumerable<(T, T)> Pairwise<T>(this IEnumerable<T> source)
