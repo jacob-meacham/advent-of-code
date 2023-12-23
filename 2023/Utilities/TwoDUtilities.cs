@@ -36,11 +36,20 @@ public static class TwoDUtilities
     public class Grid<TCell>(TCell[,] cells)
     {
         public TCell?[,] Cells { get; } = cells;
+        private int? _maxRows;
+        private int? _maxCols;
 
-        public int MaxRows => Cells.GetLength(0) - 1;
-        public int MaxCols => Cells.GetLength(1) - 1;
+        public int MaxRows
+        {
+            get { return _maxRows ??= Cells.GetLength(0) - 1; }
+        }
 
-        public static Grid<TCell> CreateFromInput(IReadOnlyList<string> lines, Func<char, TCell> convertFn)
+        public int MaxCols
+        {
+            get { return _maxCols ??= Cells.GetLength(1) - 1; }
+        }
+
+        public static Grid<TCell> CreateFromInput(IReadOnlyList<string> lines, Func<char, int, int, TCell> convertFn)
         {
             var width = lines[0].Length;
             var height = lines.Count;
@@ -49,7 +58,7 @@ public static class TwoDUtilities
             {
                 for (var y = 0; y < width; y++)
                 {
-                    cells[x, y] = convertFn(lines[x][y]);
+                    cells[x, y] = convertFn(lines[x][y], x, y);
                 }
             }
 
@@ -70,6 +79,11 @@ public static class TwoDUtilities
         public bool Contains(Vec2 pos)
         {
             return pos.X >= 0 && pos.X < Cells.GetLength(0) && pos.Y >= 0 && pos.Y < Cells.GetLength(1);
+        }
+        
+        public bool Contains((long x, long y) pos)
+        {
+            return pos.x >= 0 && pos.x < Cells.GetLength(0) && pos.y >= 0 && pos.y < Cells.GetLength(1);
         }
 
         public ref TCell? Get(Vec2 pos)
