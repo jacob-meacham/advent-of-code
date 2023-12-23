@@ -105,7 +105,7 @@ long Part1(IEnumerable<string> lines)
     return bricks.Count - unsafeToDisintegrate.Count;
 }
 
-long Part2(IReadOnlyList<string> lines)
+long Part2(IEnumerable<string> lines)
 {
     var bricks = Parse(lines).OrderBy(b => b.MaxZ).ToList();
     var heightMap = new Dictionary<(long x, long y), (long height, int brickIndex)>();
