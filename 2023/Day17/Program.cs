@@ -14,13 +14,13 @@ long Solve(TwoDUtilities.AStarSolver<Crucible> solver, Grid grid)
 
 long Part1(IReadOnlyList<string> lines)
 {
-    var grid = Grid.CreateFromInput(lines, c => int.Parse(c.ToString()));
+    var grid = Grid.CreateFromInput(lines, (c, _, _) => int.Parse(c.ToString()));
     return Solve(new CrucibleAStarSolver(grid), grid);
 }
 
 long Part2(IReadOnlyList<string> lines)
 {
-    var grid = Grid.CreateFromInput(lines, c => int.Parse(c.ToString()));
+    var grid = Grid.CreateFromInput(lines, (c, _, _) => int.Parse(c.ToString()));
     return Solve(new UltraCrucibleAStarSolver(grid), grid);
 }
 

@@ -14,7 +14,7 @@ public static class EnumerableExtensions
         // ReSharper disable once IteratorNeverReturns
     }
     
-    public static IEnumerable<(T, T)> Pairwise<T>(this IEnumerable<T> source)
+    public static IEnumerable<(T previous, T current)> Pairwise<T>(this IEnumerable<T> source)
     {
         using var enumerator = source.GetEnumerator();
         if (!enumerator.MoveNext())

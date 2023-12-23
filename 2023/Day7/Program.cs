@@ -8,9 +8,8 @@ long GetTotalValue(List<string> lines, bool jacksWild)
         return new Hand(split[0], long.Parse(split[1]), jacksWild);
     }).Order();
     
-    // the tuple is (rank, winnings)
     var result = hands
-        .Aggregate((1L, 0L), (tuple, hand) => (tuple.Item1 + 1, tuple.Item2 + tuple.Item1 * hand.Bid));
+        .Aggregate((rank: 1L, winnings: 0L), (tuple, hand) => (tuple.rank + 1, tuple.winnings + tuple.rank * hand.Bid));
     
     return result.Item2;
 }

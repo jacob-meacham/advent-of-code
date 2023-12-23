@@ -7,7 +7,7 @@ IEnumerable<IEnumerable<long>> GetSequences(IEnumerable<long> sequence)
     var sequences = new List<IEnumerable<long>> { sequence };
     while (true)
     {
-        sequence = sequence.Pairwise().Select(tuple => tuple.Item2 - tuple.Item1);
+        sequence = sequence.Pairwise().Select(tuple => tuple.current - tuple.previous);
         sequences.Add(sequence);
 
         if (sequence.All(l => l == 0))

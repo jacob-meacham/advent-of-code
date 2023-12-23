@@ -97,18 +97,18 @@ long Solve(string arrangement, IReadOnlyList<int> springs)
 
 long Part1(IEnumerable<string> lines)
 {
-    var input = new List<(string, int[])>();
+    var input = new List<(string arrangement, int[] springs)>();
     foreach (var split in lines.Select(l => l.Split(" ")))
     {
         input.Add((split[0], split[1].Split(",").Select(int.Parse).ToArray()));
     }
     
-    return input.Select(t => Solve(t.Item1, t.Item2)).Sum();
+    return input.Select(t => Solve(t.arrangement, t.springs)).Sum();
 }
 
 long Part2(IEnumerable<string> lines)
 {
-    var input = new List<(string, int[])>();
+    var input = new List<(string arrangement, int[] springs)>();
     foreach (var split in lines.Select(l => l.Split(" ")))
     {
         var arrangement = string.Join("?", Enumerable.Repeat(split[0], 5));
@@ -116,7 +116,7 @@ long Part2(IEnumerable<string> lines)
         input.Add((arrangement, springStr.Split(",").Select(int.Parse).ToArray()));
     }
     
-    return input.Select(t => Solve(t.Item1, t.Item2)).Sum();
+    return input.Select(t => Solve(t.arrangement, t.springs)).Sum();
 }
 
 var lines = new List<string>(File.ReadAllLines("input.txt"));

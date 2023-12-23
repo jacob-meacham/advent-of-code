@@ -50,8 +50,8 @@ void DebugPrint(Grid grid, Dictionary<Vec2, long> visited)
 
 long WalkGarden(Grid grid, Vec2 startingPoint, long numSteps)
 {
-    var toVisit = new Queue<(Vec2 pos, long step)>();
-    var visited = new Dictionary<(long, long), long>();
+    var toVisit = new Queue<(Vec2 pos, long step)>(2048);
+    var visited = new Dictionary<(long, long), long>(2048);
     toVisit.Enqueue((startingPoint, 0));
     while (toVisit.Count > 0)
     {
@@ -62,6 +62,7 @@ long WalkGarden(Grid grid, Vec2 startingPoint, long numSteps)
             continue;
         }
         
+        // Profiled performance and using tuple instead of Vec2 shaves quite a bit of time off
         if (!visited.TryAdd((pos.X, pos.Y), step))
         {
             // Already visited
