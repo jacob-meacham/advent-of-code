@@ -42,7 +42,7 @@ long Solve(bool[,] map, IReadOnlyList<string> lines, long totalExpansion)
     var totalSum = 0L;
     foreach (var (galaxy, others) in pairs)
     {
-        totalSum += others.Select(o => TwoDUtilities.ManhattanDistance(galaxy, o)).Sum();
+        totalSum += others.Select(o => VectorUtilities.ManhattanDistance(galaxy, o)).Sum();
     }
     
     return totalSum;

@@ -1,5 +1,5 @@
 ﻿using Utilities;
-using Vec2 = Utilities.TwoDUtilities.Vec2;
+using Vec2 = Utilities.VectorUtilities.Vec2;
 #pragma warning disable CS8321 // Local function is declared but never used
 
 void DebugPrint(Cell[,] grid, Vec2 initialPos)

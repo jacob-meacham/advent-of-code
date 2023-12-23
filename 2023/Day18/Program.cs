@@ -1,8 +1,8 @@
 ﻿using Utilities;
-using Vec2 = Utilities.TwoDUtilities.Vec2;
+using Vec2 = Utilities.VectorUtilities.Vec2;
 #pragma warning disable CS8321 // Local function is declared but never used
 
-void DebugPrint(TwoDUtilities.Grid<string> grid)
+void DebugPrint(VectorUtilities.Grid2D<string> grid)
 {
     for (var x = 0; x <= grid.MaxRows; x++)
     {
@@ -67,7 +67,7 @@ long Part1(IEnumerable<string> lines)
 
     var (height, width) = (maxX - minX, maxY - minY);
     var cells = new string[height, width];
-    var grid = new TwoDUtilities.Grid<string>(cells);
+    var grid = new VectorUtilities.Grid2D<string>(cells);
     
     foreach (var (start, dir, length, color) in walls)
     {

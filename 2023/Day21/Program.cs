@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Utilities;
-using Vec2 = Utilities.TwoDUtilities.Vec2;
-using Grid = Utilities.TwoDUtilities.Grid<char>;
+using Vec2 = Utilities.VectorUtilities.Vec2;
+using Grid = Utilities.VectorUtilities.Grid2D<char>;
 
 List<Vec2> directions =
 [

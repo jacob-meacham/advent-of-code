@@ -1,8 +1,8 @@
 ﻿using Utilities;
-using Vec2 = Utilities.TwoDUtilities.Vec2;
-using Grid = Utilities.TwoDUtilities.Grid<int>;
+using Vec2 = Utilities.VectorUtilities.Vec2;
+using Grid = Utilities.VectorUtilities.Grid2D<int>;
 
-long Solve(TwoDUtilities.AStarSolver<Crucible> solver, Grid grid)
+long Solve(Search.AStarSolver<Crucible> solver, Grid grid)
 {
     var path = solver.Solve([
         new Crucible(new Vec2(0, 0), new Vec2(1, 0), 0),
@@ -40,7 +40,7 @@ internal record Crucible(Vec2 Pos, Vec2 Direction, int Distance);
 
 internal class UltraCrucibleAStarSolver : CrucibleAStarSolver
 {
-    internal UltraCrucibleAStarSolver(Grid grid) : base(grid) { }
+    internal UltraCrucibleAStarSolver(Grid grid2D) : base(grid2D) { }
     
     protected override IEnumerable<Crucible> GetNeighbors(Crucible current)
     {
@@ -55,7 +55,7 @@ internal class UltraCrucibleAStarSolver : CrucibleAStarSolver
             neighbors = GetNeighborsMaxDistance(current, 10);
         }
         
-        return neighbors.Where(c => Grid.Contains(c.Pos));
+        return neighbors.Where(c => Grid2D.Contains(c.Pos));
     }
     
     protected override bool IsGoal(Crucible node, Crucible goal)
@@ -65,9 +65,9 @@ internal class UltraCrucibleAStarSolver : CrucibleAStarSolver
 }
 
 // TODO: Optimize by getting cost inline + not storing so much state in the pathMap + potentially use a string key
-internal class CrucibleAStarSolver(Grid grid) : TwoDUtilities.AStarSolver<Crucible>
+internal class CrucibleAStarSolver(Grid grid2D) : Search.AStarSolver<Crucible>
 {
-    protected readonly Grid Grid = grid;
+    protected readonly Grid Grid2D = grid2D;
     
     protected List<Crucible> GetNeighborsMaxDistance(Crucible current, int distance)
     {
@@ -109,17 +109,17 @@ internal class CrucibleAStarSolver(Grid grid) : TwoDUtilities.AStarSolver<Crucib
     {
 
         var neighbors = GetNeighborsMaxDistance(current, 3);
-        return neighbors.Where(c => Grid.Contains(c.Pos));
+        return neighbors.Where(c => Grid2D.Contains(c.Pos));
     }
 
     protected override long GetHeuristic(Crucible node, Crucible goal)
     {
-        return TwoDUtilities.ManhattanDistance(node.Pos, goal.Pos);
+        return VectorUtilities.ManhattanDistance(node.Pos, goal.Pos);
     }
 
     protected override long GetCost(Crucible current, Crucible neighbor)
     {
-        return Grid.Get(neighbor.Pos);
+        return Grid2D.Get(neighbor.Pos);
     }
 
     protected override bool IsGoal(Crucible node, Crucible goal)

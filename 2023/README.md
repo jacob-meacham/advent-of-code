@@ -29,4 +29,4 @@ Looking to run in <100ms
 | Day 19 | 2.6         |✅     |
 | Day 20 | 41.1        |✅     |
 | Day 21 | 284.2       |❌     |
-
+| Day 22 | 97.2        |✅     |
