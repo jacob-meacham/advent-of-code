@@ -48,6 +48,11 @@ public static class VectorUtilities
         {
             return new Vec3(a.X + b.x, a.Y + b.y, a.Z + b.z);
         }
+        
+        public static Vec3 operator *(Vec3 a, long b)
+        {
+            return new Vec3(a.X * b, a.Y * b, a.Z * b);
+        }
     }
 
     public class Grid2D<TCell>(TCell[,] cells)
