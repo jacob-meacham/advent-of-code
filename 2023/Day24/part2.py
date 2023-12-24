@@ -30,4 +30,4 @@ m = solver.model()
 x, y, z = m.eval(x), m.eval(y), m.eval(z)
 x, y, z = x.as_long(), y.as_long(), z.as_long()
 
-print(x + y + z)
+print(f'Part 2: {x + y + z}')
