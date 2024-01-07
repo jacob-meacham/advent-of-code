@@ -15,12 +15,9 @@ var directions = map[uint8]math.Vec2{
 	'R': {0, 1},
 }
 
-type wireStep struct {
-	pos  math.Vec2
-	step int
-}
+type intersectionFunc func(math.Vec2, int)
 
-func wireCoordinates(wire string, c chan wireStep) {
+func wireCoordinates(wire string, set map[math.Vec2]int, store bool, fn intersectionFunc) {
 	curPos := math.Vec2{}
 	step := 0
 	instructions := strings.Split(wire, ",")
@@ -32,32 +29,26 @@ func wireCoordinates(wire string, c chan wireStep) {
 			curPos.Y += dir.Y
 			step += 1
 
-			c <- wireStep{pos: curPos, step: step}
+			storedStep, exists := set[curPos]
+			if exists {
+				fn(curPos, storedStep+step)
+			} else if store {
+				set[curPos] = step
+			}
 		}
 	}
-
-	close(c)
 }
 
 func part1(input []string) int {
 	origin := math.Vec2{}
 
-	set := make(map[math.Vec2]bool)
+	set := make(map[math.Vec2]int)
 	var intersections []int
 
-	wire1 := make(chan wireStep)
-	go wireCoordinates(input[0], wire1)
-	for ws := range wire1 {
-		set[ws.pos] = true
-	}
-
-	wire2 := make(chan wireStep)
-	go wireCoordinates(input[1], wire2)
-	for ws := range wire2 {
-		if set[ws.pos] {
-			intersections = append(intersections, math.ManhattanDistance(ws.pos, origin))
-		}
-	}
+	wireCoordinates(input[0], set, true, func(pos math.Vec2, step int) {})
+	wireCoordinates(input[1], set, false, func(pos math.Vec2, step int) {
+		intersections = append(intersections, math.ManhattanDistance(pos, origin))
+	})
 
 	minDistance := intersections[0]
 	for _, distance := range intersections {
@@ -73,20 +64,10 @@ func part2(input []string) int {
 	set := make(map[math.Vec2]int)
 	var intersections []int
 
-	wire1 := make(chan wireStep)
-	go wireCoordinates(input[0], wire1)
-	for ws := range wire1 {
-		set[ws.pos] = ws.step
-	}
-
-	wire2 := make(chan wireStep)
-	go wireCoordinates(input[1], wire2)
-	for ws := range wire2 {
-		step, exists := set[ws.pos]
-		if exists {
-			intersections = append(intersections, step+ws.step)
-		}
-	}
+	wireCoordinates(input[0], set, true, func(pos math.Vec2, step int) {})
+	wireCoordinates(input[1], set, false, func(pos math.Vec2, step int) {
+		intersections = append(intersections, step)
+	})
 
 	minStep := intersections[0]
 	for _, step := range intersections {
