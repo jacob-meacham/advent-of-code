@@ -58,7 +58,7 @@ func Runner(fn RunFn, day string, opts ...BenchmarkOption) {
 			good = "❌"
 		}
 
-		timingString := fmt.Sprintf("%.1f", avgMilliseconds)
+		timingString := fmt.Sprintf("%.5f", avgMilliseconds)
 		fmt.Printf("| %s%s| %s%s|%s     |\n", day, numSpaces(day, 7), timingString, numSpaces(timingString, 12), good)
 	} else {
 		a, b := fn()

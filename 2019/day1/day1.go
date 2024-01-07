@@ -44,5 +44,5 @@ func main() {
 		b := part2(input)
 
 		return a, b
-	}, "Day 1")
+	}, "Day 1", aoc.WithIterations(15))
 }
