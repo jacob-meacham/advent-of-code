@@ -44,5 +44,5 @@ func main() {
 		b := part2(string(content))
 
 		return a, b
-	}, "Day 2")
+	}, "Day 5")
 }

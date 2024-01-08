@@ -80,5 +80,5 @@ func main() {
 		a, b := solution(382345, 843167)
 
 		return a, b
-	}, "Day 3")
+	}, "Day 4")
 }
