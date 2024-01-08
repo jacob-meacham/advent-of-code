@@ -15,7 +15,7 @@ func part2(input []string) int {
 }
 
 func main() {
-	content, _ := os.ReadFile("day6/input.txt")
+	content, _ := os.ReadFile("day8/input.txt")
 	input := strings.Split(string(content), "\n")
 
 	aoc.Runner(func() (int, int) {

@@ -9,3 +9,5 @@
 | Day 7  | 2.90000     |✅     |
 | Day 8  | Not done    |ND     |
 | Day 9  | 5.30000     |✅     |
+| Day 10 | Not done    |ND     |
+| Day 11 | 3.20000     |✅     |

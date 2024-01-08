@@ -89,6 +89,22 @@ func MemoryFromProgram(program string) []int {
 	return memory
 }
 
+type CurriedOutputFn func(vals ...int)
+
+func CurryOutput(numOutputs int, fn CurriedOutputFn) func(val int) {
+	curOutput := 0
+	var outputs []int
+	return func(val int) {
+		outputs = append(outputs, val)
+		curOutput++
+		if curOutput >= numOutputs {
+			fn(outputs...)
+			curOutput = 0
+			outputs = []int{}
+		}
+	}
+}
+
 func (vm *VM) Init(vals []int, opts ...VMOption) {
 	options := &VMOptions{
 		inputFn:     DefaultInputFn,
