@@ -55,7 +55,7 @@ func amplifier(memory []int, initialInputs []int, input chan int, output chan in
 		return -1
 	}), VM.WithOutputFunction(func(val int) {
 		output <- val
-	}))
+	}), VM.WithTotalMemory(len(memory)))
 
 	vm.Run()
 }
@@ -82,7 +82,7 @@ func part1(input string) int {
 
 			}), VM.WithOutputFunction(func(val int) {
 				curInputSignal = val
-			}))
+			}), VM.WithTotalMemory(len(memory)))
 
 			vm.Run()
 		}

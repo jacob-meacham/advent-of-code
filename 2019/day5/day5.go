@@ -8,13 +8,16 @@ import (
 
 func part1(input string) int {
 	lastCode := -1
+	program := VM.MemoryFromProgram(input)
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(func() int {
-		return 1
-	}), VM.WithOutputFunction(func(val int) {
-		lastCode = val
-	}))
+	vm.Init(program,
+		VM.WithInputFunction(func() int {
+			return 1
+		}),
+		VM.WithOutputFunction(func(val int) {
+			lastCode = val
+		}), VM.WithTotalMemory(len(program)))
 
 	vm.Run()
 
@@ -23,13 +26,14 @@ func part1(input string) int {
 
 func part2(input string) int {
 	lastCode := -1
+	program := VM.MemoryFromProgram(input)
 
 	vm := &VM.VM{}
 	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(func() int {
 		return 5
 	}), VM.WithOutputFunction(func(val int) {
 		lastCode = val
-	}))
+	}), VM.WithTotalMemory(len(program)))
 
 	vm.Run()
 

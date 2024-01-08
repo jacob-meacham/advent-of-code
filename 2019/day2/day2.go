@@ -7,8 +7,9 @@ import (
 )
 
 func part1(input string) int {
+	program := VM.MemoryFromProgram(input)
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input))
+	vm.Init(program, VM.WithTotalMemory(len(program)))
 	vm.Memory[1] = 12
 	vm.Memory[2] = 2
 
@@ -23,7 +24,7 @@ func part2(input string) int {
 	for a := 0; a < 100; a++ {
 		for b := 0; b < 100; b++ {
 			vm := &VM.VM{}
-			vm.Init(initialMemory)
+			vm.Init(initialMemory, VM.WithTotalMemory(len(initialMemory)))
 			vm.Memory[1] = a
 			vm.Memory[2] = b
 
