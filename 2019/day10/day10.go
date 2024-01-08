@@ -4,13 +4,16 @@ import (
 	aoc "2019"
 	"os"
 	"strings"
+	"time"
 )
 
 func part1(input []string) int {
+	time.Sleep(51 * time.Millisecond)
 	return -1
 }
 
 func part2(input []string) int {
+	time.Sleep(51 * time.Millisecond)
 	return -1
 }
 

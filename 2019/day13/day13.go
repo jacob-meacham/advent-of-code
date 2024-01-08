@@ -166,13 +166,16 @@ func part2(input string, shouldRender bool) int {
 func main() {
 	content, _ := os.ReadFile("day13/input.txt")
 
-	shouldRender := flag.Bool("render", false, "Should Render")
-	flag.Parse()
+	var shouldRender *bool
+	flagParser := func(next func()) {
+		shouldRender = flag.Bool("render", false, "Should Render")
+		next()
+	}
 
 	aoc.Runner(func() (int, int) {
 		a := part1(string(content))
 		b := part2(string(content), *shouldRender)
 
 		return a, b
-	}, "Day 13")
+	}, "Day 13", aoc.WithFlagParser(flagParser))
 }

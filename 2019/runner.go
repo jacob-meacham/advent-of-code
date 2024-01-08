@@ -14,6 +14,7 @@ type RunFn func() (int, int)
 type BenchmarkOptions struct {
 	iterations int
 	benchmark  bool
+	flagParser func(next func())
 }
 
 type BenchmarkOption func(options *BenchmarkOptions)
@@ -30,18 +31,33 @@ func WithBenchmark(benchmark bool) BenchmarkOption {
 	}
 }
 
+func WithFlagParser(parseFn func(next func())) BenchmarkOption {
+	return func(options *BenchmarkOptions) {
+		options.flagParser = parseFn
+	}
+}
+
 func Runner(fn RunFn, day string, opts ...BenchmarkOption) {
+	// Uses an express middleware-like setup
 	options := &BenchmarkOptions{
 		iterations: 10,
+		flagParser: func(next func()) {
+			next()
+		},
 	}
 
-	benchmark := flag.Bool("bench", false, "Benchmark")
-	flag.Parse()
-	options.benchmark = *benchmark
+	finalParser := func() {
+		benchmark := flag.Bool("bench", false, "Benchmark")
+		flag.Parse()
+
+		options.benchmark = *benchmark
+	}
 
 	for _, opt := range opts {
 		opt(options)
 	}
+
+	options.flagParser(finalParser)
 
 	if options.benchmark {
 		ts := time.Now()
