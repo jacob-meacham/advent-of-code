@@ -35,12 +35,13 @@ type InputFn func() int
 type OutputFn func(int)
 
 type VM struct {
-	Memory       []int
-	IP           int
-	RelativeBase int
-	paramModes   []Mode // Scratch memory
-	inputFn      InputFn
-	outputFn     OutputFn
+	Memory        []int
+	IP            int
+	RelativeBase  int
+	paramModes    []Mode // Scratch memory
+	inputFn       InputFn
+	outputFn      OutputFn
+	haltRequested bool
 }
 
 type VMOptions struct {
@@ -103,6 +104,10 @@ func CurryOutput(numOutputs int, fn CurriedOutputFn) func(val int) {
 			outputs = []int{}
 		}
 	}
+}
+
+func (vm *VM) Halt() {
+	vm.haltRequested = true
 }
 
 func (vm *VM) Init(vals []int, opts ...VMOption) {
@@ -230,6 +235,10 @@ func (vm *VM) Run() {
 	vm.paramModes = make([]Mode, 5)
 
 	for {
+		if vm.haltRequested {
+			break
+		}
+
 		// TODO: Should this take and return the new IP or modify the VM state?
 		if !vm.step() {
 			break
