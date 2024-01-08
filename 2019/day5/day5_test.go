@@ -18,7 +18,7 @@ func TestPart2(t *testing.T) {
 	content, _ := os.ReadFile("input.txt")
 
 	result := part2(string(content))
-	if result != 4559 {
+	if result != 11956381 {
 		t.Error("Incorrect answer")
 	}
 }

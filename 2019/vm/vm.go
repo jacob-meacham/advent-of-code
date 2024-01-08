@@ -19,6 +19,7 @@ const (
 	OpJmpIfFalse
 	OpLT
 	OpEquals
+	OpRelativeBase
 	OpHalt = 99
 )
 
@@ -27,22 +28,25 @@ type Mode int
 const (
 	Position Mode = iota
 	Immediate
+	Relative
 )
 
 type InputFn func() int
 type OutputFn func(int)
 
 type VM struct {
-	Memory     []int
-	IP         int
-	paramModes []Mode // Scratch memory
-	inputFn    InputFn
-	outputFn   OutputFn
+	Memory       []int
+	IP           int
+	RelativeBase int
+	paramModes   []Mode // Scratch memory
+	inputFn      InputFn
+	outputFn     OutputFn
 }
 
 type VMOptions struct {
-	inputFn  InputFn
-	outputFn OutputFn
+	inputFn     InputFn
+	outputFn    OutputFn
+	totalMemory int
 }
 
 type VMOption func(options *VMOptions)
@@ -50,6 +54,12 @@ type VMOption func(options *VMOptions)
 func WithInputFunction(inputFn InputFn) VMOption {
 	return func(options *VMOptions) {
 		options.inputFn = inputFn
+	}
+}
+
+func WithTotalMemory(totalMemory int) VMOption {
+	return func(options *VMOptions) {
+		options.totalMemory = totalMemory
 	}
 }
 
@@ -81,18 +91,20 @@ func MemoryFromProgram(program string) []int {
 
 func (vm *VM) Init(vals []int, opts ...VMOption) {
 	options := &VMOptions{
-		inputFn:  DefaultInputFn,
-		outputFn: DefaultOutputFn,
+		inputFn:     DefaultInputFn,
+		outputFn:    DefaultOutputFn,
+		totalMemory: 65536,
 	}
 
 	for _, opt := range opts {
 		opt(options)
 	}
 
-	vm.Memory = make([]int, len(vals))
+	vm.Memory = make([]int, options.totalMemory)
 	copy(vm.Memory, vals)
 
 	vm.IP = 0
+	vm.RelativeBase = 0
 	vm.paramModes = make([]Mode, 5)
 
 	vm.inputFn = options.inputFn
@@ -106,6 +118,8 @@ func (vm *VM) getParameterValue(mode Mode, pos int, ip int) int {
 func (vm *VM) getAddress(mode Mode, pos int, ip int) int {
 	if mode == Immediate {
 		return ip + pos
+	} else if mode == Relative {
+		return vm.RelativeBase + vm.Memory[ip+pos]
 	}
 
 	// Position is default
@@ -137,16 +151,19 @@ func (vm *VM) step() bool {
 	case OpAdd:
 		p0 := vm.getParameterValue(vm.paramModes[0], 1, vm.IP)
 		p1 := vm.getParameterValue(vm.paramModes[1], 2, vm.IP)
-		vm.Memory[vm.Memory[vm.IP+3]] = p0 + p1
+		resultAddress := vm.getAddress(vm.paramModes[2], 3, vm.IP)
+		vm.Memory[resultAddress] = p0 + p1
 		vm.IP += 4
 	case OpMul:
 		p0 := vm.getParameterValue(vm.paramModes[0], 1, vm.IP)
 		p1 := vm.getParameterValue(vm.paramModes[1], 2, vm.IP)
-		vm.Memory[vm.Memory[vm.IP+3]] = p0 * p1
+		resultAddress := vm.getAddress(vm.paramModes[2], 3, vm.IP)
+		vm.Memory[resultAddress] = p0 * p1
 		vm.IP += 4
 	case OpInput:
 		val := vm.inputFn()
-		vm.Memory[vm.Memory[vm.IP+1]] = val
+		resultAddress := vm.getAddress(vm.paramModes[0], 1, vm.IP)
+		vm.Memory[resultAddress] = val
 		vm.IP += 2
 	case OpOutput:
 		p0 := vm.getParameterValue(vm.paramModes[0], 1, vm.IP)
@@ -176,6 +193,11 @@ func (vm *VM) step() bool {
 		}
 
 		vm.IP += 4
+	case OpRelativeBase:
+		p0 := vm.getParameterValue(vm.paramModes[0], 1, vm.IP)
+		vm.RelativeBase += p0
+
+		vm.IP += 2
 	case OpHalt:
 		return false
 	default:
@@ -188,6 +210,7 @@ func (vm *VM) step() bool {
 
 func (vm *VM) Run() {
 	vm.IP = 0
+	vm.RelativeBase = 0
 	vm.paramModes = make([]Mode, 5)
 
 	for {

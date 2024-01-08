@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func TestExampleInputs(t *testing.T) {
 	a := part1("3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0")
@@ -16,5 +19,23 @@ func TestExampleInputs(t *testing.T) {
 	a = part1("3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0")
 	if a != 65210 {
 		t.Errorf("Part 1: Expected 65210 but got %v", a)
+	}
+}
+
+func TestPart1(t *testing.T) {
+	content, _ := os.ReadFile("input.txt")
+
+	result := part1(string(content))
+	if result != 24405 {
+		t.Error("Incorrect answer")
+	}
+}
+
+func TestPart2(t *testing.T) {
+	content, _ := os.ReadFile("input.txt")
+
+	result := part2(string(content))
+	if result != 8271623 {
+		t.Error("Incorrect answer")
 	}
 }
