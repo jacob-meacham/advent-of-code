@@ -30,7 +30,7 @@ def main():
         if not directory.exists():
             break
 
-        executable = directory / f'day{x}'
+        executable = directory / 'bin' / f'day{x}'
         if not executable.exists():
             subprocess.run(['/opt/homebrew/bin/go', 'build', '-o', f'day{x}/bin/day{x}', f'day{x}/day{x}.go'], text=True,
                            capture_output=True)
