@@ -32,10 +32,10 @@ def main():
 
         executable = directory / f'day{x}'
         if not executable.exists():
-            subprocess.run(['/opt/homebrew/bin/go', 'build', '-o', f'day{x}/day{x}', f'day{x}/day{x}.go'], text=True,
+            subprocess.run(['/opt/homebrew/bin/go', 'build', '-o', f'day{x}/bin/day{x}', f'day{x}/day{x}.go'], text=True,
                            capture_output=True)
 
-        output = subprocess.run([f'day{x}/day{x}', '-bench'], text=True, capture_output=True)
+        output = subprocess.run([f'day{x}/bin/day{x}', '-bench'], text=True, capture_output=True)
         lines = output.stdout.split("\n")
 
         m = re.match(r'\|(\s*Day \d+\s*)\|(\s*\S+\s*)\|(.*?)\|', lines[-2])
