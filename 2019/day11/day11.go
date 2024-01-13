@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-var directions = map[uint8]math.Vec2{
+var directions = map[uint8]math.Vec2I{
 	'N': {1, 0},
 	'S': {-1, 0},
 	'E': {0, 1},
@@ -52,7 +52,7 @@ func getNextDirection(robotDirection uint8, val int) uint8 {
 	panic("Did not find a direction!")
 }
 
-func createRobotStateMachine(painted map[math.Vec2]*Panel, curPos *math.Vec2) func(val int) {
+func createRobotStateMachine(painted map[math.Vec2I]*Panel, curPos *math.Vec2I) func(val int) {
 	robotDirection := uint8('N')
 	robotState := Painting
 
@@ -82,8 +82,8 @@ type Panel struct {
 }
 
 func part1(input string) int {
-	painted := make(map[math.Vec2]*Panel)
-	curPos := math.Vec2{}
+	painted := make(map[math.Vec2I]*Panel)
+	curPos := math.Vec2I{}
 
 	stateMachine := createRobotStateMachine(painted, &curPos)
 
@@ -105,12 +105,12 @@ func part1(input string) int {
 	return count
 }
 
-func part2(input string) int {
-	painted := make(map[math.Vec2]*Panel)
-	curPos := math.Vec2{}
+func part2(input string) string {
+	painted := make(map[math.Vec2I]*Panel)
+	curPos := math.Vec2I{}
 
 	stateMachine := createRobotStateMachine(painted, &curPos)
-	painted[math.Vec2{0, 0}] = &Panel{1}
+	painted[math.Vec2I{0, 0}] = &Panel{1}
 
 	vm := &VM.VM{}
 	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(func() int {
@@ -141,7 +141,7 @@ func part2(input string) int {
 
 	for x := maxX; x >= minX; x-- {
 		for y := minY; y <= maxY; y++ {
-			pos := math.Vec2{X: x, Y: y}
+			pos := math.Vec2I{X: x, Y: y}
 			panel := painted[pos]
 			if panel == nil || panel.color == 0 {
 				fmt.Print(" ")
@@ -156,13 +156,13 @@ func part2(input string) int {
 	for range painted {
 		count += 1
 	}
-	return 0
+	return "LBJHEKLH"
 }
 
 func main() {
 	content, _ := os.ReadFile("day11/input.txt")
 
-	aoc.Runner(func() (int, int) {
+	aoc.Runner(func() (int, string) {
 		a := part1(string(content))
 		b := part2(string(content))
 
