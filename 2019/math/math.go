@@ -45,6 +45,10 @@ func Abs[T Number](n T) T {
 	return n
 }
 
+func Floor[T Number](n T) T {
+	return T(math.Floor(float64(n)))
+}
+
 func GCD(a int, b int) int {
 	for b != 0 {
 		a, b = b, a%b
