@@ -18,20 +18,20 @@ def bold(text: str) -> str:
 def pad(s, total_length):
     return s + ' ' * (total_length - len(s))
 
-def main():
+def main(force_rebuild: bool, start_from: int) -> None:
     print(f'| {bold("Day")}    | {bold("Timing (ms)")} | {bold("Good?")} |')
     print('|--------|-------------|-------|')
 
     bests = get_bests()
     total_time = 0.0
     num_complete = 0
-    for x in range(1, 26):
+    for x in range(start_from, 26):
         directory = Path(f'day{x}/')
         if not directory.exists():
             break
 
         executable = directory / 'bin' / f'day{x}'
-        if not executable.exists():
+        if not executable.exists() or force_rebuild:
             subprocess.run(['/opt/homebrew/bin/go', 'build', '-o', f'day{x}/bin/day{x}', f'day{x}/day{x}.go'], text=True,
                            capture_output=True)
 
@@ -64,6 +64,15 @@ def main():
         for x in range(num_complete):
             f.write(f'{str(bests[x])}\n')
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        prog='Advent of Code Harness')
+    parser.add_argument('-f', '--force-rebuild', action='store_true')
+    parser.add_argument('--start-from', type=int, default=1)
+    return parser.parse_args()
 
-if __name__ == "__main__":
-    main()
+
+if __name__ == '__main__':
+    args = parse_args()
+
+    main(args.force_rebuild, args.start_from)

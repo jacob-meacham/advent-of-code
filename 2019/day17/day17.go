@@ -95,29 +95,28 @@ func part2(input string) int {
 	image = append(image, []string{})
 
 	vm := &VM.VM{}
+	memory := VM.MemoryFromProgram(input)
+	memory[0] = 2
+
+	in := make(chan int)
+	defer close(in)
+	
+	result := 0
+	vm.Init(memory, VM.WithChannelInput(in), VM.WithOutputFunction(func(val int) {
+		result = val
+	}))
+	wg := vm.RunAsync()
 
 	movementRoutine := "A,B,B,C,C,A,A,B,B,C\n"
 	functionA := "L,12,R,4,R,4\n"
 	functionB := "R,12,R,4,L,12\n"
 	functionC := "R,12,R,4,L,6,L,8,L,8\n"
-
 	runes := []rune(movementRoutine + functionA + functionB + functionC + "n\n")
-	vals := make([]int, len(runes))
-	for i := range runes {
-		vals[i] = int(runes[i])
+	for _, r := range runes {
+		in <- int(r)
 	}
 
-	result := 0
-	outputFunc := func(val int) {
-		result = val
-	}
-
-	memory := VM.MemoryFromProgram(input)
-	memory[0] = 2
-
-	vm.Init(memory, VM.WithArrayInputFunction(vals), VM.WithOutputFunction(outputFunc))
-	vm.Run()
-
+	wg.Wait()
 	return result
 }
 

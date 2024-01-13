@@ -5,6 +5,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type Opcode int
@@ -72,7 +73,8 @@ func WithArrayInputFunction(vals []int) VMOption {
 func WithChannelInput(c <-chan int) VMOption {
 	return func(options *VMOptions) {
 		options.inputFn = func() int {
-			return <-c
+			val := <-c
+			return val
 		}
 	}
 }
@@ -279,4 +281,17 @@ func (vm *VM) Run() {
 			break
 		}
 	}
+}
+
+// Ensures we run to completion
+func (vm *VM) RunAsync() *sync.WaitGroup {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		vm.Run()
+	}()
+
+	return &wg
 }
