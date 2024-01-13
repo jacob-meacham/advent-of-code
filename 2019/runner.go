@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type RunFn func() (int, int)
+type RunFn[T string | int, U string | int] func() (T, U)
 
 // Just playing around with Go
 type BenchmarkOptions struct {
@@ -37,7 +37,7 @@ func WithFlagParser(parseFn func(next func())) BenchmarkOption {
 	}
 }
 
-func Runner(fn RunFn, day string, opts ...BenchmarkOption) {
+func Runner[T string | int, U string | int](fn RunFn[T, U], day string, opts ...BenchmarkOption) {
 	// Uses an express middleware-like setup
 	options := &BenchmarkOptions{
 		iterations: 10,
@@ -80,7 +80,7 @@ func Runner(fn RunFn, day string, opts ...BenchmarkOption) {
 		a, b := fn()
 		fmt.Print(ansi.White.String("Part 1: "))
 		fmt.Print(ansi.Green.String(ansi.Bright.String(fmt.Sprintf("%v", a))))
-		fmt.Print(ansi.White.String(", Part 2: "))
+		fmt.Print(ansi.White.String(" Part 2: "))
 		fmt.Print(ansi.Green.String(ansi.Bright.String(fmt.Sprintf("%v", b))))
 		fmt.Println()
 	}
