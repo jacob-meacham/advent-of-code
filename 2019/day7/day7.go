@@ -2,37 +2,11 @@ package main
 
 import (
 	aoc "2019"
+	array "2019/util"
 	VM "2019/vm"
 	"os"
 	"sync"
 )
-
-func swap(arr []int, i, j int) {
-	arr[i], arr[j] = arr[j], arr[i]
-}
-
-// generate all permutations of the array like itertools.permutations in python.
-func permute(arr []int, start int, result *[][]int) {
-	if start == len(arr) {
-		// Make a copy of the current state of arr and add it to the result.
-		permutation := make([]int, len(arr))
-		copy(permutation, arr)
-		*result = append(*result, permutation)
-		return
-	}
-
-	for i := start; i < len(arr); i++ {
-		swap(arr, start, i)
-		permute(arr, start+1, result)
-		swap(arr, start, i)
-	}
-}
-
-func allPermutations(arr []int) [][]int {
-	var result [][]int
-	permute(arr, 0, &result)
-	return result
-}
 
 func amplifier(memory []int, initialInputs []int, input chan int, output chan int, wg *sync.WaitGroup) {
 	if wg != nil {
@@ -66,7 +40,7 @@ func part1(input string) int {
 	vm := &VM.VM{}
 
 	arr := []int{0, 1, 2, 3, 4}
-	permutations := allPermutations(arr)
+	permutations := array.Permutatations(arr)
 	maxOutputSignal := 0
 	for _, p := range permutations {
 		curInputSignal := 0
@@ -99,7 +73,7 @@ func part2(input string) int {
 	memory := VM.MemoryFromProgram(input)
 
 	arr := []int{5, 6, 7, 8, 9}
-	permutations := allPermutations(arr)
+	permutations := array.Permutatations(arr)
 	maxOutputSignal := 0
 	for _, p := range permutations {
 		var wg sync.WaitGroup

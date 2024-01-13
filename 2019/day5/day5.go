@@ -7,37 +7,37 @@ import (
 )
 
 func part1(input string) int {
+	in := make(chan int)
+	defer close(in)
 	lastCode := -1
-	program := VM.MemoryFromProgram(input)
 
+	program := VM.MemoryFromProgram(input)
 	vm := &VM.VM{}
 	vm.Init(program,
-		VM.WithInputFunction(func() int {
-			return 1
-		}),
+		VM.WithChannelInput(in),
 		VM.WithOutputFunction(func(val int) {
 			lastCode = val
 		}), VM.WithTotalMemory(len(program)))
-
-	vm.Run()
+	go vm.Run()
+	in <- 1
 
 	return lastCode
 }
 
 func part2(input string) int {
-	lastCode := -1
+	in := make(chan int)
+	out := make(chan int)
+	defer close(in)
+
 	program := VM.MemoryFromProgram(input)
-
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(func() int {
-		return 5
-	}), VM.WithOutputFunction(func(val int) {
-		lastCode = val
-	}), VM.WithTotalMemory(len(program)))
+	vm.Init(program,
+		VM.WithChannelInput(in),
+		VM.WithChannelOut(out), VM.WithTotalMemory(len(program)))
+	go vm.Run()
+	in <- 5
 
-	vm.Run()
-
-	return lastCode
+	return <-out
 }
 
 func main() {
