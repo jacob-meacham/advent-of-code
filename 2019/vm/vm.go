@@ -58,6 +58,25 @@ func WithInputFunction(inputFn InputFn) VMOption {
 	}
 }
 
+func WithArrayInputFunction(vals []int) VMOption {
+	i := 0
+	return func(options *VMOptions) {
+		options.inputFn = func() int {
+			v := vals[i]
+			i++
+			return v
+		}
+	}
+}
+
+func WithChannelInput(c <-chan int) VMOption {
+	return func(options *VMOptions) {
+		options.inputFn = func() int {
+			return <-c
+		}
+	}
+}
+
 func WithTotalMemory(totalMemory int) VMOption {
 	return func(options *VMOptions) {
 		options.totalMemory = totalMemory
@@ -70,6 +89,20 @@ func WithOutputFunction(outputFn OutputFn) VMOption {
 	}
 }
 
+func WithChannelOut(c chan int) VMOption {
+	return func(options *VMOptions) {
+		options.outputFn = func(i int) {
+			c <- i
+		}
+	}
+}
+
+func WithNoOpOutputFunction() VMOption {
+	return func(options *VMOptions) {
+		options.outputFn = NoOpOutputFn
+	}
+}
+
 func DefaultInputFn() int {
 	panic("No input function defined!")
 }
@@ -77,6 +110,8 @@ func DefaultInputFn() int {
 func DefaultOutputFn(val int) {
 	fmt.Println(val)
 }
+
+func NoOpOutputFn(_ int) {}
 
 func MemoryFromProgram(program string) []int {
 	input := strings.Split(program, ",")
