@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var directions = map[uint8]math.Vec2{
+var directions = map[uint8]math.Vec2I{
 	'N': {1, 0},
 	'S': {-1, 0},
 	'E': {0, 1},
