@@ -8,17 +8,17 @@ import (
 	"strings"
 )
 
-var directions = map[uint8]math.Vec2{
+var directions = map[uint8]math.Vec2I{
 	'U': {1, 0},
 	'D': {-1, 0},
 	'L': {0, -1},
 	'R': {0, 1},
 }
 
-type intersectionFunc func(math.Vec2, int)
+type intersectionFunc func(math.Vec2I, int)
 
-func wireCoordinates(wire string, set map[math.Vec2]int, store bool, fn intersectionFunc) {
-	curPos := math.Vec2{}
+func wireCoordinates(wire string, set map[math.Vec2I]int, store bool, fn intersectionFunc) {
+	curPos := math.Vec2I{}
 	step := 0
 	instructions := strings.Split(wire, ",")
 	for _, instruction := range instructions {
@@ -40,13 +40,13 @@ func wireCoordinates(wire string, set map[math.Vec2]int, store bool, fn intersec
 }
 
 func part1(input []string) int {
-	origin := math.Vec2{}
+	origin := math.Vec2I{}
 
-	set := make(map[math.Vec2]int)
+	set := make(map[math.Vec2I]int)
 	var intersections []int
 
-	wireCoordinates(input[0], set, true, func(pos math.Vec2, step int) {})
-	wireCoordinates(input[1], set, false, func(pos math.Vec2, step int) {
+	wireCoordinates(input[0], set, true, func(pos math.Vec2I, step int) {})
+	wireCoordinates(input[1], set, false, func(pos math.Vec2I, step int) {
 		intersections = append(intersections, math.ManhattanDistance(pos, origin))
 	})
 
@@ -61,11 +61,11 @@ func part1(input []string) int {
 }
 
 func part2(input []string) int {
-	set := make(map[math.Vec2]int)
+	set := make(map[math.Vec2I]int)
 	var intersections []int
 
-	wireCoordinates(input[0], set, true, func(pos math.Vec2, step int) {})
-	wireCoordinates(input[1], set, false, func(pos math.Vec2, step int) {
+	wireCoordinates(input[0], set, true, func(pos math.Vec2I, step int) {})
+	wireCoordinates(input[1], set, false, func(pos math.Vec2I, step int) {
 		intersections = append(intersections, step)
 	})
 

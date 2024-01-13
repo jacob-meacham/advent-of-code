@@ -29,7 +29,7 @@ func part1(input string) int {
 
 	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(inputFn), VM.WithOutputFunction(outputFn))
 
-	vm.Run()
+	//vm.Run()
 
 	return -1
 }
