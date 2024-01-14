@@ -10,7 +10,7 @@ func (set *Set[T]) Add(value T) {
 
 func (set *Set[T]) Values() []T {
 	v := make([]T, 0)
-	for k, _ := range set.values {
+	for k := range set.values {
 		v = append(v, k)
 	}
 

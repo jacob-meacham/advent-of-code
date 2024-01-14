@@ -27,7 +27,6 @@ func part1(input string) int {
 		return 1
 	}
 
-	// Create a function to clone, which will allow for a standard DFS/BFS
 	vm.Init(VM.MemoryFromProgram(input))
 
 	//vm.Run(VM.WithInputFunction(inputFn), VM.WithOutputFunction(outputFn))
