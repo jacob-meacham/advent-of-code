@@ -6,33 +6,33 @@ import (
 	"os"
 )
 
-func check(memory []int, x int, y int) int {
+func check(memory []int, x int, y int, out chan int) {
 	in := make(chan int)
-	out := make(chan int)
 	defer close(in)
 
 	vm := &VM.VM{}
-	vm.Init(memory)
+	vm.Init(memory, VM.WithTotalMemory(512))
 	go vm.Run(VM.WithChannelInput(in), VM.WithChannelOut(out))
 	in <- x
 	in <- y
-
-	return <-out
 }
 
 func part1(input string) int {
 	memory := VM.MemoryFromProgram(input)
 
-	results := make([]int, 0)
+	channels := make([]chan int, 0)
 
 	for x := 0; x < 50; x++ {
 		for y := 0; y < 50; y++ {
-			results = append(results, check(memory, x, y))
+			out := make(chan int)
+			go check(memory, x, y, out)
+			channels = append(channels, out)
 		}
 	}
 
 	numAffected := 0
-	for _, x := range results {
+	for _, c := range channels {
+		x := <-c
 		if x == 1 {
 			numAffected += 1
 		}
