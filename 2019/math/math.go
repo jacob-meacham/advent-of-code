@@ -24,6 +24,10 @@ func (vec *Vec2[T]) Neg() Vec2[T] {
 	return *vec
 }
 
+func (vec *Vec2[T]) Add(other *Vec2[T]) Vec2[T] {
+	return Vec2[T]{vec.X + other.X, vec.Y + other.Y}
+}
+
 func (vec *Vec2[T]) Magnitude() float64 {
 	return math.Sqrt(float64(vec.X*vec.X + vec.Y*vec.Y))
 }
