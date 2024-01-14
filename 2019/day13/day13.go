@@ -73,7 +73,7 @@ func renderFrame(frame [][]Tile, score int, s tcell.Screen) {
 	s.Show()
 }
 
-func part1(input string) int {
+func part1(input string, shouldRender bool) int {
 	rows := 23
 	cols := 45
 	frame := make([][]Tile, rows)
@@ -88,11 +88,13 @@ func part1(input string) int {
 	})
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithOutputFunction(outputFn))
+	vm.Init(VM.MemoryFromProgram(input))
 
-	vm.Run()
+	vm.Run(VM.WithOutputFunction(outputFn))
 
-	renderFrame(frame, 0, s)
+	if shouldRender {
+		renderFrame(frame, 0, s)
+	}
 
 	numBlocks := 0
 	for x := range frame {
@@ -155,10 +157,10 @@ func part2(input string, shouldRender bool) int {
 	}
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(inputFn), VM.WithOutputFunction(outputFn))
+	vm.Init(VM.MemoryFromProgram(input))
 	vm.Memory[0] = 2
 
-	vm.Run()
+	vm.Run(VM.WithInputFunction(inputFn), VM.WithOutputFunction(outputFn))
 
 	return curScore
 }
@@ -173,7 +175,7 @@ func main() {
 	}
 
 	aoc.Runner(func() (int, int) {
-		a := part1(string(content))
+		a := part1(string(content), *shouldRender)
 		b := part2(string(content), *shouldRender)
 
 		return a, b

@@ -25,8 +25,8 @@ func part1(input string) int {
 		}
 	}
 
-	vm.Init(VM.MemoryFromProgram(input), VM.WithOutputFunction(outputFn))
-	vm.Run()
+	vm.Init(VM.MemoryFromProgram(input), VM.WithTotalMemory(4096))
+	vm.Run(VM.WithOutputFunction(outputFn))
 
 	alignmentSum := 0
 	for y := 1; y < len(image)-1; y++ {
@@ -100,12 +100,12 @@ func part2(input string) int {
 
 	in := make(chan int)
 	defer close(in)
-	
+
 	result := 0
-	vm.Init(memory, VM.WithChannelInput(in), VM.WithOutputFunction(func(val int) {
+	vm.Init(memory)
+	wg := vm.RunAsync(VM.WithChannelInput(in), VM.WithOutputFunction(func(val int) {
 		result = val
 	}))
-	wg := vm.RunAsync()
 
 	movementRoutine := "A,B,B,C,C,A,A,B,B,C\n"
 	functionA := "L,12,R,4,R,4\n"

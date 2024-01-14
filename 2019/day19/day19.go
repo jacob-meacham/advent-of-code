@@ -12,8 +12,8 @@ func check(memory []int, x int, y int) int {
 	defer close(in)
 
 	vm := &VM.VM{}
-	vm.Init(memory, VM.WithChannelInput(in), VM.WithChannelOut(out))
-	go vm.Run()
+	vm.Init(memory)
+	go vm.Run(VM.WithChannelInput(in), VM.WithChannelOut(out))
 	in <- x
 	in <- y
 

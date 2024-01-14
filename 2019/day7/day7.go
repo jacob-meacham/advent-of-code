@@ -15,7 +15,9 @@ func amplifier(memory []int, initialInputs []int, input chan int, output chan in
 
 	inputNum := 0
 	vm := &VM.VM{}
-	vm.Init(memory, VM.WithInputFunction(func() int {
+	vm.Init(memory, VM.WithTotalMemory(len(memory)))
+
+	vm.Run(VM.WithInputFunction(func() int {
 		if inputNum < len(initialInputs) {
 			inputNum += 1
 			return initialInputs[inputNum-1]
@@ -29,9 +31,7 @@ func amplifier(memory []int, initialInputs []int, input chan int, output chan in
 		return -1
 	}), VM.WithOutputFunction(func(val int) {
 		output <- val
-	}), VM.WithTotalMemory(len(memory)))
-
-	vm.Run()
+	}))
 }
 
 func part1(input string) int {
@@ -46,7 +46,9 @@ func part1(input string) int {
 		curInputSignal := 0
 		for _, phaseSetting := range p {
 			inputNum := 0
-			vm.Init(memory, VM.WithInputFunction(func() int {
+			vm.Init(memory, VM.WithTotalMemory(len(memory)))
+
+			vm.Run(VM.WithInputFunction(func() int {
 				if inputNum == 0 {
 					inputNum++
 					return phaseSetting
@@ -56,9 +58,7 @@ func part1(input string) int {
 
 			}), VM.WithOutputFunction(func(val int) {
 				curInputSignal = val
-			}), VM.WithTotalMemory(len(memory)))
-
-			vm.Run()
+			}))
 		}
 
 		if curInputSignal > maxOutputSignal {

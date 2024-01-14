@@ -31,3 +31,7 @@ func (stack *Stack[T]) IsEmpty() bool {
 	_, hasValue := stack.Peek()
 	return !hasValue
 }
+
+func (stack *Stack[T]) Length() int {
+	return len(stack.values)
+}

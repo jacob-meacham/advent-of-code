@@ -34,6 +34,7 @@ const (
 
 type InputFn func() int
 type OutputFn func(int)
+type FinalizeFn func()
 
 type VM struct {
 	Memory        []int
@@ -46,22 +47,35 @@ type VM struct {
 }
 
 type VMOptions struct {
-	inputFn     InputFn
-	outputFn    OutputFn
 	totalMemory int
 }
 
 type VMOption func(options *VMOptions)
 
-func WithInputFunction(inputFn InputFn) VMOption {
+func WithTotalMemory(totalMemory int) VMOption {
 	return func(options *VMOptions) {
+		options.totalMemory = totalMemory
+	}
+}
+
+type VMRunOptions struct {
+	inputFn    InputFn
+	outputFn   OutputFn
+	finalizeFn FinalizeFn
+	reset      bool
+}
+
+type VMRunOption func(options *VMRunOptions)
+
+func WithInputFunction(inputFn InputFn) VMRunOption {
+	return func(options *VMRunOptions) {
 		options.inputFn = inputFn
 	}
 }
 
-func WithArrayInputFunction(vals []int) VMOption {
+func WithArrayInput(vals []int) VMRunOption {
 	i := 0
-	return func(options *VMOptions) {
+	return func(options *VMRunOptions) {
 		options.inputFn = func() int {
 			v := vals[i]
 			i++
@@ -70,8 +84,8 @@ func WithArrayInputFunction(vals []int) VMOption {
 	}
 }
 
-func WithChannelInput(c <-chan int) VMOption {
-	return func(options *VMOptions) {
+func WithChannelInput(c <-chan int) VMRunOption {
+	return func(options *VMRunOptions) {
 		options.inputFn = func() int {
 			val := <-c
 			return val
@@ -79,28 +93,26 @@ func WithChannelInput(c <-chan int) VMOption {
 	}
 }
 
-func WithTotalMemory(totalMemory int) VMOption {
-	return func(options *VMOptions) {
-		options.totalMemory = totalMemory
-	}
-}
-
-func WithOutputFunction(outputFn OutputFn) VMOption {
-	return func(options *VMOptions) {
+func WithOutputFunction(outputFn OutputFn) VMRunOption {
+	return func(options *VMRunOptions) {
 		options.outputFn = outputFn
 	}
 }
 
-func WithChannelOut(c chan int) VMOption {
-	return func(options *VMOptions) {
+func WithChannelOut(c chan int) VMRunOption {
+	return func(options *VMRunOptions) {
 		options.outputFn = func(i int) {
 			c <- i
+		}
+
+		options.finalizeFn = func() {
+			close(c)
 		}
 	}
 }
 
-func WithNoOpOutputFunction() VMOption {
-	return func(options *VMOptions) {
+func WithNoOpOutputFunction() VMRunOption {
+	return func(options *VMRunOptions) {
 		options.outputFn = NoOpOutputFn
 	}
 }
@@ -149,8 +161,6 @@ func (vm *VM) Halt() {
 
 func (vm *VM) Init(vals []int, opts ...VMOption) {
 	options := &VMOptions{
-		inputFn:     DefaultInputFn,
-		outputFn:    DefaultOutputFn,
 		totalMemory: 65536,
 	}
 
@@ -164,9 +174,20 @@ func (vm *VM) Init(vals []int, opts ...VMOption) {
 	vm.IP = 0
 	vm.RelativeBase = 0
 	vm.paramModes = make([]Mode, 5)
+}
 
-	vm.inputFn = options.inputFn
-	vm.outputFn = options.outputFn
+func (vm *VM) Clone() *VM {
+	newVM := &VM{
+		IP:           vm.IP,
+		RelativeBase: vm.RelativeBase,
+		inputFn:      vm.inputFn,
+		outputFn:     vm.outputFn,
+	}
+
+	newVM.Memory = make([]int, len(vm.Memory))
+	copy(newVM.Memory, vm.Memory)
+
+	return newVM
 }
 
 func (vm *VM) getParameterValue(mode Mode, pos int, ip int) int {
@@ -266,11 +287,27 @@ func (vm *VM) step() bool {
 	return true
 }
 
-func (vm *VM) Run() {
-	vm.IP = 0
-	vm.RelativeBase = 0
-	vm.paramModes = make([]Mode, 5)
+func (vm *VM) Run(opts ...VMRunOption) {
+	options := &VMRunOptions{
+		reset:      true,
+		inputFn:    DefaultInputFn,
+		outputFn:   DefaultOutputFn,
+		finalizeFn: func() {},
+	}
 
+	for _, opt := range opts {
+		opt(options)
+	}
+
+	vm.inputFn = options.inputFn
+	vm.outputFn = options.outputFn
+
+	if options.reset {
+		vm.IP = 0
+		vm.RelativeBase = 0
+	}
+
+	vm.paramModes = make([]Mode, 5)
 	for {
 		if vm.haltRequested {
 			break
@@ -281,16 +318,18 @@ func (vm *VM) Run() {
 			break
 		}
 	}
+
+	options.finalizeFn()
 }
 
 // Ensures we run to completion
-func (vm *VM) RunAsync() *sync.WaitGroup {
+func (vm *VM) RunAsync(opts ...VMRunOption) *sync.WaitGroup {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
 		defer wg.Done()
-		vm.Run()
+		vm.Run(opts...)
 	}()
 
 	return &wg

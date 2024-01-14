@@ -172,7 +172,7 @@ func main() {
 
 	var debug *bool
 	flagParser := func(next func()) {
-		debug = flag.Bool("render", false, "Should Render")
+		debug = flag.Bool("debug", false, "Debug")
 		next()
 	}
 

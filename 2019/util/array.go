@@ -28,7 +28,7 @@ func Permutatations[T any](arr []T) [][]T {
 }
 
 func GeneratePairs[T any](slice []T) [][2]T {
-	var pairs [][2]T
+	pairs := make([][2]T, 0)
 	for i := 0; i < len(slice); i++ {
 		for j := i + 1; j < len(slice); j++ {
 			pairs = append(pairs, [2]T{slice[i], slice[j]})

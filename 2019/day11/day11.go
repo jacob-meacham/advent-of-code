@@ -88,15 +88,14 @@ func part1(input string) int {
 	stateMachine := createRobotStateMachine(painted, &curPos)
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(func() int {
+	vm.Init(VM.MemoryFromProgram(input))
+	vm.Run(VM.WithInputFunction(func() int {
 		if painted[curPos] == nil {
 			return 0
 		}
 
 		return painted[curPos].color
 	}), VM.WithOutputFunction(stateMachine))
-
-	vm.Run()
 
 	count := 0
 	for range painted {
@@ -113,15 +112,15 @@ func part2(input string) string {
 	painted[math.Vec2I{0, 0}] = &Panel{1}
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithInputFunction(func() int {
+	vm.Init(VM.MemoryFromProgram(input))
+
+	vm.Run(VM.WithInputFunction(func() int {
 		if painted[curPos] == nil {
 			return 0
 		}
 
 		return painted[curPos].color
 	}), VM.WithOutputFunction(stateMachine))
-
-	vm.Run()
 
 	minX, minY, maxX, maxY := 10000, 10000, -10000, -10000
 	for pos := range painted {

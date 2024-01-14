@@ -13,12 +13,11 @@ func part1(input string) int {
 
 	program := VM.MemoryFromProgram(input)
 	vm := &VM.VM{}
-	vm.Init(program,
-		VM.WithChannelInput(in),
+	vm.Init(program, VM.WithTotalMemory(len(program)))
+	go vm.Run(VM.WithChannelInput(in),
 		VM.WithOutputFunction(func(val int) {
 			lastCode = val
-		}), VM.WithTotalMemory(len(program)))
-	go vm.Run()
+		}))
 	in <- 1
 
 	return lastCode
@@ -31,10 +30,8 @@ func part2(input string) int {
 
 	program := VM.MemoryFromProgram(input)
 	vm := &VM.VM{}
-	vm.Init(program,
-		VM.WithChannelInput(in),
-		VM.WithChannelOut(out), VM.WithTotalMemory(len(program)))
-	go vm.Run()
+	vm.Init(program, VM.WithTotalMemory(len(program)))
+	go vm.Run(VM.WithChannelInput(in), VM.WithChannelOut(out))
 	in <- 5
 
 	return <-out

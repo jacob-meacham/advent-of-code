@@ -12,8 +12,8 @@ func part1(input string) int {
 	defer close(in)
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithChannelInput(in), VM.WithChannelOut(out))
-	go vm.Run()
+	vm.Init(VM.MemoryFromProgram(input))
+	go vm.Run(VM.WithChannelInput(in), VM.WithChannelOut(out))
 
 	in <- 1
 
@@ -26,8 +26,8 @@ func part2(input string) int {
 	defer close(in)
 
 	vm := &VM.VM{}
-	vm.Init(VM.MemoryFromProgram(input), VM.WithChannelInput(in), VM.WithChannelOut(out))
-	go vm.Run()
+	vm.Init(VM.MemoryFromProgram(input))
+	go vm.Run(VM.WithChannelInput(in), VM.WithChannelOut(out))
 	in <- 2
 
 	return <-out
