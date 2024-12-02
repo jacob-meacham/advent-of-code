@@ -24,12 +24,12 @@ defmodule Day1 do
 
   def part2(input) do
     {l1, l2} = parse_input(input)
-    {result, _} = Enum.reduce(l1, {0, 0}, fn item, {cum, start} ->
-      possible_set = Enum.slice(l2, start..length(l2)) |> Enum.take_while(fn i -> i <= item end)
-      num_equal = Enum.filter(possible_set, fn i -> i == item end) |> length()
-
-      {cum + item * num_equal, start + length(possible_set) - num_equal}
-    end)
+    frequencies = Enum.frequencies(l2)
+    result = l1 |>
+    Enum.map(fn item ->
+      item * Map.get(frequencies, item, 0)
+    end) |>
+    Enum.sum
 
     result
   end
