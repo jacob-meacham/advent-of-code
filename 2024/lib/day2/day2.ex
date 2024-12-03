@@ -1,4 +1,4 @@
-defmodule Day2 do
+defmodule SafeReports do
   @moduledoc "Day 2"
 
   defp parse_input(input) do
@@ -82,12 +82,12 @@ defmodule Day2 do
 end
 
 {:ok, contents} = File.read("lib/day2/input.txt")
-IO.puts(Day2.part1(contents))
-IO.puts(Day2.part2(contents))
+IO.puts(SafeReports.part1(contents))
+IO.puts(SafeReports.part2(contents))
 
 
-Benchee.run(%{part_1: fn -> contents |> Day2.part1() end,
-            part_2: fn -> contents |> Day2.part2() end,
+Benchee.run(%{day2_part1: fn -> contents |> SafeReports.part1() end,
+            day2_part2: fn -> contents |> SafeReports.part2() end,
             #  part_2b: fn -> contents |> Day2.part2_b() end
              }, warmup: 2,
 time: 5)

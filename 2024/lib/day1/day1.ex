@@ -1,4 +1,4 @@
-defmodule Day1 do
+defmodule LocationFinder do
   @moduledoc "Day 1"
 
   def parse_input(input) do
@@ -22,6 +22,7 @@ defmodule Day1 do
     result
   end
 
+  @spec part2(binary()) :: number()
   def part2(input) do
     {l1, l2} = parse_input(input)
     frequencies = Enum.frequencies(l2)
@@ -37,10 +38,10 @@ end
 
 # TODO: Figure out better way of reading...
 {:ok, contents} = File.read("lib/day1/input.txt")
-IO.puts(Day1.part1(contents))
-IO.puts(Day1.part2(contents))
+IO.puts(LocationFinder.part1(contents))
+IO.puts(LocationFinder.part2(contents))
 
 # TODO: Want something better than this if I stay with Elixir
-Benchee.run(%{part_1: fn -> contents |> Day1.part1() end,
-             part_2: fn -> contents |> Day1.part2() end}, warmup: 2,
+Benchee.run(%{day1_part1: fn -> contents |> LocationFinder.part1() end,
+             day2_part2: fn -> contents |> LocationFinder.part2() end}, warmup: 2,
 time: 3)
