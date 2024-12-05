@@ -28,7 +28,11 @@ IO.puts(CorruptedMemoryChecker.part1(contents))
 IO.puts(CorruptedMemoryChecker.part2(contents))
 
 
-Benchee.run(%{day3_part1: fn -> contents |> CorruptedMemoryChecker.part1() end,
-            day3_part2: fn -> contents |> CorruptedMemoryChecker.part2() end,
-             }, warmup: 2,
-time: 5)
+Benchee.run(%{
+  day3_part1: fn -> contents |> CorruptedMemoryChecker.part1() end,
+  day3_part2: fn -> contents |> CorruptedMemoryChecker.part2() end,
+  day3_total: fn ->
+    CorruptedMemoryChecker.part1(contents)
+    CorruptedMemoryChecker.part2(contents)
+  end}, warmup: 2,
+time: 3)

@@ -31,38 +31,6 @@ defmodule SafeReports do
     valid
   end
 
-  # defp is_safe_b([first | row]) do
-  #   t = row |> Enum.reduce({first, nil, nil, false, true}, fn
-  #       _, {_, _, _, true, false} ->
-  #         IO.inspect(true)
-  #         {0, 0, 0, true, false}
-  #       v, {prev, prev_prev, prev_diff, used_lookback, _} ->
-  #         IO.inspect({v, prev, prev_prev, prev_diff, used_lookback, true})
-  #       next_diff = v - prev
-  #       # TODO: Cleanup ugly
-  #       other_diff = case (prev_prev) do
-  #         nil -> 0
-  #         _ -> v - prev_prev
-  #       end
-  #       valid = is_valid(v, prev, prev_diff)
-  #       # TODO: Need to handle the case where the first match is invalid
-  #       cond do
-  #         prev_prev == nil && !valid ->
-  #           {v, prev, next_diff, true, true}
-  #         true ->
-  #           case {valid, used_lookback} do
-  #             {true, _} -> {v, prev, next_diff, used_lookback, valid}
-  #             # next_diff also needs to change in this case...
-  #             {false, false} -> {v, prev_prev, other_diff, true, true}
-  #             {false, true} -> {0, 0, 0, false, false}
-  #           end
-  #       end
-  #     end)
-  #     IO.inspect(t)
-  #     {_, _, _, _, valid} = t
-  #     valid
-  # end
-
   def part2(input) do
     parse_input(input) |>
       Enum.map(fn row ->
@@ -71,14 +39,6 @@ defmodule SafeReports do
       end)
       |> Enum.count(& &1)
   end
-
-  # def part2_b(input) do
-  #   parse_input(input) |>
-  #     Enum.map(fn row ->
-  #       is_safe_b?(row)
-  #     end)
-  #     |> Enum.count(& &1)
-  # end
 end
 
 {:ok, contents} = File.read("lib/day2/input.txt")
@@ -86,8 +46,11 @@ IO.puts(SafeReports.part1(contents))
 IO.puts(SafeReports.part2(contents))
 
 
-Benchee.run(%{day2_part1: fn -> contents |> SafeReports.part1() end,
-            day2_part2: fn -> contents |> SafeReports.part2() end,
-            #  part_2b: fn -> contents |> Day2.part2_b() end
-             }, warmup: 2,
-time: 5)
+Benchee.run(%{
+              day2_part1: fn -> contents |> SafeReports.part1() end,
+              day2_part2: fn -> contents |> SafeReports.part2() end,
+              day2_total: fn ->
+                SafeReports.part1(contents)
+                SafeReports.part2(contents)
+              end}, warmup: 2,
+time: 3)

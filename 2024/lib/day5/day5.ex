@@ -88,7 +88,10 @@ IO.puts(LaunchSafetyManual.part1(contents))
 IO.puts(LaunchSafetyManual.part2(contents))
 
 Benchee.run(%{
-            day5_part1: fn -> contents |> LaunchSafetyManual.part1() end,
-            day5_part2: fn -> contents |> LaunchSafetyManual.part2() end,
-             }, warmup: 2,
-time: 5)
+  day5_part1: fn -> contents |> LaunchSafetyManual.part1() end,
+  day5_part2: fn -> contents |> LaunchSafetyManual.part2() end,
+  day5_total: fn ->
+    LaunchSafetyManual.part1(contents)
+    LaunchSafetyManual.part2(contents)
+  end}, warmup: 2,
+time: 3)

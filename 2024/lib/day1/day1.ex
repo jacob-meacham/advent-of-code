@@ -36,12 +36,15 @@ defmodule LocationFinder do
   end
 end
 
-# TODO: Figure out better way of reading...
 {:ok, contents} = File.read("lib/day1/input.txt")
 IO.puts(LocationFinder.part1(contents))
 IO.puts(LocationFinder.part2(contents))
 
 # TODO: Want something better than this if I stay with Elixir
 Benchee.run(%{day1_part1: fn -> contents |> LocationFinder.part1() end,
-             day2_part2: fn -> contents |> LocationFinder.part2() end}, warmup: 2,
+              day1_part2: fn -> contents |> LocationFinder.part2() end,
+              day1_total: fn ->
+                LocationFinder.part1(contents)
+                LocationFinder.part2(contents)
+              end}, warmup: 2,
 time: 3)
