@@ -30,10 +30,7 @@ defmodule LaunchSafetyManual do
       {rules, orders}
   end
 
-  defp order_valid?([o], _) when length([o]) == 1 do
-    true
-  end
-
+  defp order_valid?([o], _) when length([o]) == 1, do: true
   defp order_valid?([first | rest], rules) do
     s = MapSet.new(rest)
     rule_set = rules |> Map.get(first, MapSet.new())
