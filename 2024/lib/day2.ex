@@ -1,4 +1,5 @@
-defmodule SafeReports do
+defmodule Advent.Day2.SafeReports do
+  use Advent.Day, no: 2
   @moduledoc "Day 2"
 
   defp parse_input(input) do
@@ -36,18 +37,21 @@ defmodule SafeReports do
         |> Enum.any?(&safe?/1)
       end)
   end
+
+  def run_part1() do input() |> part1() end
+  def run_part2() do input() |> part2() end
 end
 
-{:ok, contents} = File.read("lib/day2/input.txt")
-IO.puts(SafeReports.part1(contents))
-IO.puts(SafeReports.part2(contents))
+# contents = Advent.Day.input(2)
+# IO.puts(SafeReports.part1(contents))
+# IO.puts(SafeReports.part2(contents))
 
 
-Benchee.run(%{
-              day2_part1: fn -> contents |> SafeReports.part1() end,
-              day2_part2: fn -> contents |> SafeReports.part2() end,
-              day2_total: fn ->
-                SafeReports.part1(contents)
-                SafeReports.part2(contents)
-              end}, warmup: 2,
-time: 3)
+# Benchee.run(%{
+#               day2_part1: fn -> contents |> SafeReports.part1() end,
+#               day2_part2: fn -> contents |> SafeReports.part2() end,
+#               day2_total: fn ->
+#                 SafeReports.part1(contents)
+#                 SafeReports.part2(contents)
+#               end}, warmup: 2,
+# time: 3)

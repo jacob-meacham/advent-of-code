@@ -9,7 +9,8 @@ defmodule Lists do
   end
 end
 
-defmodule LaunchSafetyManual do
+defmodule Advent.Day5.LaunchSafetyManual do
+  use Advent.Day, no: 5
   @moduledoc "Day 5"
 
   defp parse_input(input) do
@@ -78,17 +79,20 @@ defmodule LaunchSafetyManual do
       |> Enum.map(fn l -> Lists.middle(l) |> String.to_integer() end)
       |> Enum.sum()
   end
+
+  def run_part1() do input() |> part1() end
+  def run_part2() do input() |> part2() end
 end
 
-{:ok, contents} = File.read("lib/day5/input.txt")
-IO.puts(LaunchSafetyManual.part1(contents))
-IO.puts(LaunchSafetyManual.part2(contents))
+# contents = Advent.Day.input(5)
+# IO.puts(LaunchSafetyManual.part1(contents))
+# IO.puts(LaunchSafetyManual.part2(contents))
 
-Benchee.run(%{
-  day5_part1: fn -> contents |> LaunchSafetyManual.part1() end,
-  day5_part2: fn -> contents |> LaunchSafetyManual.part2() end,
-  day5_total: fn ->
-    LaunchSafetyManual.part1(contents)
-    LaunchSafetyManual.part2(contents)
-  end}, warmup: 2,
-time: 3)
+# Benchee.run(%{
+#   day5_part1: fn -> contents |> LaunchSafetyManual.part1() end,
+#   day5_part2: fn -> contents |> LaunchSafetyManual.part2() end,
+#   day5_total: fn ->
+#     LaunchSafetyManual.part1(contents)
+#     LaunchSafetyManual.part2(contents)
+#   end}, warmup: 2,
+# time: 3)

@@ -1,4 +1,5 @@
-defmodule CorruptedMemoryChecker do
+defmodule Advent.Day3.CorruptedMemoryChecker do
+  use Advent.Day, no: 3
   @moduledoc "Day 3"
 
 
@@ -21,18 +22,21 @@ defmodule CorruptedMemoryChecker do
     end)
     total
   end
+
+  def run_part1() do input() |> part1() end
+  def run_part2() do input() |> part2() end
 end
 
-{:ok, contents} = File.read("lib/day3/input.txt")
-IO.puts(CorruptedMemoryChecker.part1(contents))
-IO.puts(CorruptedMemoryChecker.part2(contents))
+# contents = Advent.Day.input(3)
+# IO.puts(CorruptedMemoryChecker.part1(contents))
+# IO.puts(CorruptedMemoryChecker.part2(contents))
 
 
-Benchee.run(%{
-  day3_part1: fn -> contents |> CorruptedMemoryChecker.part1() end,
-  day3_part2: fn -> contents |> CorruptedMemoryChecker.part2() end,
-  day3_total: fn ->
-    CorruptedMemoryChecker.part1(contents)
-    CorruptedMemoryChecker.part2(contents)
-  end}, warmup: 2,
-time: 3)
+# Benchee.run(%{
+#   day3_part1: fn -> contents |> CorruptedMemoryChecker.part1() end,
+#   day3_part2: fn -> contents |> CorruptedMemoryChecker.part2() end,
+#   day3_total: fn ->
+#     CorruptedMemoryChecker.part1(contents)
+#     CorruptedMemoryChecker.part2(contents)
+#   end}, warmup: 2,
+# time: 3)

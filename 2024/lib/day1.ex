@@ -1,4 +1,5 @@
-defmodule LocationFinder do
+defmodule Advent.Day1.LocationFinder do
+  use Advent.Day, no: 1
   @moduledoc "Day 1"
 
   @spec parse_input(binary()) :: {list(integer()), list(integer())}
@@ -29,17 +30,16 @@ defmodule LocationFinder do
     |> Enum.map(&(&1 * Map.get(frequencies, &1, 0)))
     |> Enum.sum()
   end
+
+  def run_part1() do input() |> part1() end
+  def run_part2() do input() |> part2() end
 end
 
-{:ok, contents} = File.read("lib/day1/input.txt")
-IO.puts(LocationFinder.part1(contents))
-IO.puts(LocationFinder.part2(contents))
-
 # TODO: Want something better than this if I stay with Elixir
-Benchee.run(%{day1_part1: fn -> contents |> LocationFinder.part1() end,
-              day1_part2: fn -> contents |> LocationFinder.part2() end,
-              day1_total: fn ->
-                LocationFinder.part1(contents)
-                LocationFinder.part2(contents)
-              end}, warmup: 2,
-time: 3)
+# Benchee.run(%{day1_part1: fn -> contents |> LocationFinder.part1() end,
+#               day1_part2: fn -> contents |> LocationFinder.part2() end,
+#               day1_total: fn ->
+#                 LocationFinder.part1(contents)
+#                 LocationFinder.part2(contents)
+#               end}, warmup: 2,
+# time: 3)

@@ -1,4 +1,5 @@
-defmodule GuardPatrol do
+defmodule Advent.Day6.GuardPatrol do
+  use Advent.Day, no: 6
   @moduledoc "Day 6"
 
   defp parse_grid(input) do
@@ -95,17 +96,7 @@ defmodule GuardPatrol do
     end)
     |> Enum.count(fn {:ok, val} -> val end)
   end
+
+  def run_part1() do input() |> part1() end
+  def run_part2() do input() |> part2() end
 end
-
-{:ok, contents} = File.read("lib/day6/input.txt")
-IO.puts(GuardPatrol.part1(contents))
-IO.puts(GuardPatrol.part2(contents))
-
-# Benchee.run(%{
-#   day6_part1: fn -> contents |> GuardPatrol.part1() end,
-#   day6_part2: fn -> contents |> GuardPatrol.part2() end,
-#   day6_total: fn ->
-#     GuardPatrol.part1(contents)
-#     GuardPatrol.part2(contents)
-#   end}, warmup: 2,
-# time: 3)
