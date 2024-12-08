@@ -13,19 +13,19 @@ defmodule LaunchSafetyManual do
   @moduledoc "Day 5"
 
   defp parse_input(input) do
-    [rule_list, orders] = input |> String.split("\n\n", trim: true)
+    [rule_list, orders] = String.split(input, "\n\n", trim: true)
 
     rules = rule_list
       |> String.split("\n", trim: true)
       |> Enum.reduce(%{}, fn rule, acc ->
         [a, b] = rule |> String.split("|", trim: true)
-        acc |> Map.update(a, MapSet.new([b]), fn s -> s|> MapSet.put(b) end)
+        Map.update(acc, a, MapSet.new([b]), &MapSet.put(&1, b))
       end)
 
-      orders = orders |> String.split("\n", trim: true)
-      |> Enum.map(fn order ->
-        String.split(order, ",", trim: true)
-      end)
+      orders =
+        orders
+      |> String.split("\n", trim: true)
+      |> Enum.map(&String.split(&1, ",", trim: true))
 
       {rules, orders}
   end

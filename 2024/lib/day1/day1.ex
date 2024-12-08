@@ -1,38 +1,33 @@
 defmodule LocationFinder do
   @moduledoc "Day 1"
 
+  @spec parse_input(binary()) :: {list(integer()), list(integer())}
   def parse_input(input) do
-    numbers = input |> String.split("\n", trim: true) |>
-      Enum.map(fn i -> i |> String.split("   ", trim: true) end) |>
-      Enum.map(fn [a, b] -> [String.to_integer(a), String.to_integer(b)] end) |>
-      Enum.map(&List.to_tuple/1)
-
-    {l1, l2} = Enum.unzip(numbers)
-    l1 = Enum.sort(l1)
-    l2 = Enum.sort(l2)
-
-    {l1, l2}
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&String.split(&1, "   ", trim: true))
+    |> Enum.map(fn [a, b] -> [String.to_integer(a), String.to_integer(b)] end)
+    |> Enum.map(&List.to_tuple/1)
+    |> Enum.unzip()
+    |> then(fn {l1, l2} -> {Enum.sort(l1), Enum.sort(l2)} end)
   end
 
+  @spec part2(binary()) :: integer()
   def part1(input) do
     {l1, l2} = parse_input(input)
-    result = Enum.zip(l1, l2) |>
-    Enum.reduce(0, fn {a, b}, acc -> abs(a - b) + acc end)
 
-    result
+    Enum.zip(l1, l2)
+    |> Enum.reduce(0, fn {a, b}, acc -> abs(a - b) + acc end)
   end
 
-  @spec part2(binary()) :: number()
+  @spec part2(binary()) :: integer()
   def part2(input) do
     {l1, l2} = parse_input(input)
     frequencies = Enum.frequencies(l2)
-    result = l1 |>
-    Enum.map(fn item ->
-      item * Map.get(frequencies, item, 0)
-    end) |>
-    Enum.sum
 
-    result
+    l1
+    |> Enum.map(&(&1 * Map.get(frequencies, &1, 0)))
+    |> Enum.sum()
   end
 end
 

@@ -11,11 +11,8 @@ defmodule SafeReports do
   end
 
   def part1(input) do
-    parse_input(input) |>
-      Enum.map(fn row ->
-        safe?(row)
-      end)
-      |> Enum.count(& &1)
+    parse_input(input)
+    |> Enum.count(&safe?/1)
   end
 
   defp valid?(a, b, prev_diff) do
@@ -24,7 +21,8 @@ defmodule SafeReports do
   end
 
   defp safe?([first | row]) do
-    {_, _, valid} = row |> Enum.reduce({first, nil, true}, fn
+    {_, _, valid} = row
+    |> Enum.reduce({first, nil, true}, fn
         _, {_, _, false} -> {0, 0, false}
         v, {prev, prev_diff, _} -> {v, v - prev, valid?(v, prev, prev_diff)}
       end)
@@ -33,11 +31,10 @@ defmodule SafeReports do
 
   def part2(input) do
     parse_input(input) |>
-      Enum.map(fn row ->
+      Enum.count(fn row ->
         [row | Enum.map(0..(length(row) - 1), &List.delete_at(row, &1))]
         |> Enum.any?(&safe?/1)
       end)
-      |> Enum.count(& &1)
   end
 end
 

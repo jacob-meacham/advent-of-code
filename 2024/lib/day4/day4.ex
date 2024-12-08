@@ -1,46 +1,34 @@
 defmodule WordSearch do
   @moduledoc "Day 4"
 
+  @directions [
+    {1, 0}, {-1, 0}, {0, 1}, {0, -1},
+    {1, 1}, {-1, -1}, {1, -1}, {-1, 1}
+  ]
+
   defp parse(input) do
     input
     |> String.split("\n", trim: true)
     |> Enum.with_index
     |> Enum.flat_map(fn {line, row} ->
-      String.split(line, "")
+      line
+      |> String.graphemes
       |> Enum.with_index
-      |> Enum.flat_map(fn {char, col} ->
-        position = {row, col}
-        [{position, char}]
-      end)
+      |> Enum.map(fn {char, col} -> {{row, col}, char} end)
     end)
     |> Map.new
   end
 
-  defp directions do
-    [
-      {1, 0},
-      {-1, 0},
-      {0, 1},
-      {0, -1},
-      {1, 1},
-      {-1, -1},
-      {1, -1},
-      {-1, 1}
-    ]
-  end
-
   def part1(input) do
     grid = parse(input)
+
     grid
     |> Enum.filter(fn {_, c} -> c == "X" end)
     |> Enum.reduce(0, fn {position, _}, count ->
       # Check in each direction
-      directions()
+      @directions
         |> Enum.reduce(count, fn direction, count ->
-          case matches_word?(["X", "M", "A", "S"], grid, position, direction) do
-            true -> count + 1
-            false -> count
-          end
+          if matches_word?(["X", "M", "A", "S"], grid, position, direction), do: count + 1, else: count
         end)
     end)
   end
@@ -62,13 +50,16 @@ defmodule WordSearch do
     grid
     |> Enum.filter(fn {_, c} -> c == "A" end)
     |> Enum.reduce(0, fn {{px, py}, _}, count ->
-      [ul, ur, ll, lr] = [{-1, -1}, {1, -1}, {-1, 1}, {1, 1}] |> Enum.map(fn {dx, dy} -> Map.get(grid, {px + dx, py + dy}, "#") end)
-      case ([ul, lr] == ["S", "M"] or [ul, lr] == ["M", "S"]) and
-      ([ur, ll] == ["S", "M"] or [ur, ll] == ["M", "S"]) do
-        true -> count + 1
-        false -> count
-      end
+      diagonals = [{-1, -1}, {1, -1}, {-1, 1}, {1, 1}]
+      |> Enum.map(fn {dx, dy} -> Map.get(grid, {px + dx, py + dy}, "#") end)
+
+      if is_valid_diagonal?(diagonals), do: count + 1, else: count
     end)
+  end
+
+  defp is_valid_diagonal?([ul, ur, ll, lr]) do
+    ([ul, lr] == ["S", "M"] or [ul, lr] == ["M", "S"]) and
+    ([ur, ll] == ["S", "M"] or [ur, ll] == ["M", "S"])
   end
 end
 
