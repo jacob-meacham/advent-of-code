@@ -34,12 +34,3 @@ defmodule Advent.Day1.LocationFinder do
   def run_part1() do input() |> part1() end
   def run_part2() do input() |> part2() end
 end
-
-# TODO: Want something better than this if I stay with Elixir
-# Benchee.run(%{day1_part1: fn -> contents |> LocationFinder.part1() end,
-#               day1_part2: fn -> contents |> LocationFinder.part2() end,
-#               day1_total: fn ->
-#                 LocationFinder.part1(contents)
-#                 LocationFinder.part2(contents)
-#               end}, warmup: 2,
-# time: 3)

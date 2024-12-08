@@ -41,17 +41,3 @@ defmodule Advent.Day2.SafeReports do
   def run_part1() do input() |> part1() end
   def run_part2() do input() |> part2() end
 end
-
-# contents = Advent.Day.input(2)
-# IO.puts(SafeReports.part1(contents))
-# IO.puts(SafeReports.part2(contents))
-
-
-# Benchee.run(%{
-#               day2_part1: fn -> contents |> SafeReports.part1() end,
-#               day2_part2: fn -> contents |> SafeReports.part2() end,
-#               day2_total: fn ->
-#                 SafeReports.part1(contents)
-#                 SafeReports.part2(contents)
-#               end}, warmup: 2,
-# time: 3)

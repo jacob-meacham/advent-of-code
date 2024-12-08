@@ -66,17 +66,3 @@ defmodule Advent.Day4.WordSearch do
   def run_part1() do input() |> part1() end
   def run_part2() do input() |> part2() end
 end
-
-# contents = Advent.Day.input(4)
-# IO.puts(WordSearch.part1(contents))
-# IO.puts(WordSearch.part2(contents))
-
-
-# Benchee.run(%{
-#   day4_part1: fn -> contents |> WordSearch.part1() end,
-#   day4_part2: fn -> contents |> WordSearch.part2() end,
-#   day4_total: fn ->
-#     WordSearch.part1(contents)
-#     WordSearch.part2(contents)
-#   end}, warmup: 2,
-# time: 3)

@@ -83,16 +83,3 @@ defmodule Advent.Day5.LaunchSafetyManual do
   def run_part1() do input() |> part1() end
   def run_part2() do input() |> part2() end
 end
-
-# contents = Advent.Day.input(5)
-# IO.puts(LaunchSafetyManual.part1(contents))
-# IO.puts(LaunchSafetyManual.part2(contents))
-
-# Benchee.run(%{
-#   day5_part1: fn -> contents |> LaunchSafetyManual.part1() end,
-#   day5_part2: fn -> contents |> LaunchSafetyManual.part2() end,
-#   day5_total: fn ->
-#     LaunchSafetyManual.part1(contents)
-#     LaunchSafetyManual.part2(contents)
-#   end}, warmup: 2,
-# time: 3)
