@@ -1,5 +1,7 @@
 # AoC 2023
 
+[2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024)
+
 Using this as an excuse to get better at modern C# development.
 
 # Timing

@@ -1,5 +1,7 @@
 # Timing
 
+[2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024)
+
 Trying for all solutions under 500ms (on 2021 M1)
 
 | Day    | Timing (ms) | Good? |

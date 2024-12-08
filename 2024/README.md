@@ -1,25 +1,8 @@
 # AOC 2024
 
+[2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024)
+
 Elixir edition!
-
-## Framework TODO
-
-Figure out the best way to organize so that it's easy to run a single one, loading input is not part of the benchmarking and it's easy to run all
-
-TODO:
-
-[time: 3]
-|> Benchee.init()
-|> Benchee.system()
-|> Benchee.benchmark("flat_map", fn -> Enum.flat_map(list, map_fun) end)
-|> Benchee.benchmark(
-  "map.flatten",
-  fn -> list |> Enum.map(map_fun) |> List.flatten() end
-)
-|> Benchee.collect()
-|> Benchee.statistics()
-|> Benchee.relative_statistics()
-|> Benchee.Formatter.output(Benchee.Formatters.Console)
 
 ## Timing
 
