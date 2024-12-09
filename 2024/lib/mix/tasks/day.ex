@@ -13,6 +13,7 @@ defmodule Mix.Tasks.Day do
     run([day, "0"])
   end
 
+  # TODO: Allow benchmarking
   @impl Mix.Task
   def run([day, part]) do
     {:ok, modules} = :application.get_key(:advent_of_code, :modules)
@@ -33,6 +34,7 @@ defmodule Mix.Tasks.Day do
       Code.ensure_loaded?(module)
       if Kernel.function_exported?(module, func_name, 0) do
         IO.puts("#{text}: #{Kernel.apply(module, func_name, [])}")
+        #Benchee.run(%{"Part 2": fn -> Kernel.apply(module, func_name, []) end})
       else
         Mix.Shell.IO.error("#{func_name} is undefined for Day #{day}")
       end

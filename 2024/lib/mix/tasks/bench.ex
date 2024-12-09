@@ -22,8 +22,6 @@ defmodule Mix.Tasks.Bench do
     |> Benchee.collect()
     |> Benchee.statistics()
 
-    IO.inspect(stats.scenarios)
-
     table_data = stats.scenarios
     |> Enum.group_by(fn scenario ->
       Regex.run(~r/^Day \d+/, scenario.name) |> List.first()

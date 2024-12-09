@@ -54,11 +54,11 @@ defmodule Advent.Day4.WordSearch do
       diagonals = [{-1, -1}, {1, -1}, {-1, 1}, {1, 1}]
       |> Enum.map(fn {dx, dy} -> Map.get(grid, {px + dx, py + dy}, "#") end)
 
-      if is_valid_diagonal?(diagonals), do: count + 1, else: count
+      if valid_diagonal?(diagonals), do: count + 1, else: count
     end)
   end
 
-  defp is_valid_diagonal?([ul, ur, ll, lr]) do
+  defp valid_diagonal?([ul, ur, ll, lr]) do
     ([ul, lr] == ["S", "M"] or [ul, lr] == ["M", "S"]) and
     ([ur, ll] == ["S", "M"] or [ur, ll] == ["M", "S"])
   end
