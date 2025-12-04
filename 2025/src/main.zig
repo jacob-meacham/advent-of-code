@@ -1,5 +1,16 @@
 const std = @import("std");
 const day1 = @import("day_1.zig");
+const day2 = @import("day_2.zig");
+const day3 = @import("day_3.zig");
+const day4 = @import("day_4.zig");
+const day5 = @import("day_5.zig");
+const day6 = @import("day_6.zig");
+const day7 = @import("day_7.zig");
+const day8 = @import("day_8.zig");
+const day9 = @import("day_9.zig");
+const day10 = @import("day_10.zig");
+const day11 = @import("day_11.zig");
+const day12 = @import("day_12.zig");
 
 const Action = enum {
     bench,
@@ -19,8 +30,18 @@ const Day = struct {
 };
 
 const days: []const Day = &[_]Day {
-    .{ .dayNum = 1, .part1 = day1.part1, .part2 = day1.part2 }
-    // TODO: add more days
+    .{ .dayNum = 1, .part1 = day1.part1, .part2 = day1.part2 },
+    .{ .dayNum = 2, .part1 = day2.part1, .part2 = day2.part2 },
+    .{ .dayNum = 3, .part1 = day3.part1, .part2 = day3.part2 },
+    .{ .dayNum = 4, .part1 = day4.part1, .part2 = day4.part2 },
+    .{ .dayNum = 5, .part1 = day5.part1, .part2 = day5.part2 },
+    .{ .dayNum = 6, .part1 = day6.part1, .part2 = day6.part2 },
+    .{ .dayNum = 7, .part1 = day7.part1, .part2 = day7.part2 },
+    .{ .dayNum = 8, .part1 = day8.part1, .part2 = day8.part2 },
+    .{ .dayNum = 9, .part1 = day9.part1, .part2 = day9.part2 },
+    .{ .dayNum = 10, .part1 = day10.part1, .part2 = day10.part2 },
+    .{ .dayNum = 11, .part1 = day11.part1, .part2 = day11.part2 },
+    .{ .dayNum = 12, .part1 = day12.part1, .part2 = day12.part2 }
 };
 
 fn readInput(allocator: std.mem.Allocator, path: []const u8) ![]u8 {
@@ -117,9 +138,9 @@ pub fn main() !void {
                     .{ dayNum, avgMs[0], avgMs[1] });
             } else {
                 printBenchmarkHeader();
-                for (days, 1..) |day, index| {
+                for (days) |day| {
                     const avgMs = try benchmarkDay(allocator, day);
-                    printBenchmarkRow(index, avgMs[0], avgMs[1]);
+                    printBenchmarkRow(day.dayNum, avgMs[0], avgMs[1]);
                 }
                 printBenchmarkFooter();
             }
