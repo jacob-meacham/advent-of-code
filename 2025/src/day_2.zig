@@ -152,6 +152,8 @@ fn allInvalidInRange(allocator: std.mem.Allocator, lower: IdNumber, upper: IdNum
 
 pub fn part1(allocator: std.mem.Allocator, input: []const u8) !i64 {
     const idRanges = try parseInput(allocator, input);
+    defer allocator.free(idRanges);
+
     var totalInvalid: u64 = 0;
     for (idRanges) | range | {
         const lower, const upper = range;
@@ -164,6 +166,8 @@ pub fn part1(allocator: std.mem.Allocator, input: []const u8) !i64 {
 
 pub fn part2(allocator: std.mem.Allocator, input: []const u8) !i64 {
     const idRanges = try parseInput(allocator, input);
+    defer allocator.free(idRanges);
+
     var totalInvalid: u64 = 0;
     for (idRanges) | range | {
         const lower, const upper = range;
