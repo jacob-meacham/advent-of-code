@@ -52,8 +52,14 @@ defmodule Mix.Tasks.Bench do
 
     IO.puts("|--------|-------------|-------------|------------|------|")
     
-    grand_total = Enum.reduce(table_data, 0, fn %{total: total}, acc -> acc + total end)
-    IO.puts "| **Total** | | | **#{Float.round(grand_total, 2)}** | |"
+    part_1_total = Float.round(Enum.reduce(table_data, 0, fn %{part_1: part_1}, acc -> acc + part_1 end), 2)
+    part_2_total = Float.round(Enum.reduce(table_data, 0, fn %{part_2: part_2}, acc -> acc + part_2 end), 2)
+    grand_total = Float.round(part_1_total + part_2_total, 2)
+    num_days = length(table_data)
+    avg_time_per_day = grand_total / num_days
+    total_good = if avg_time_per_day <= 100, do: "✅", else: "❌"
+    
+    IO.puts "| Total  | #{part_1_total}        | #{part_2_total}        | #{grand_total}       | #{total_good}    |"
   end
 
   defp only_day_modules(module_name) do

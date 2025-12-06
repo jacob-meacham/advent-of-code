@@ -4,10 +4,12 @@
 
 [2024 Advent of Code](https://adventofcode.com/2024) Elixir edition!
 
+# Usage
 * Run the benchmarks with `mix bench`
 * Run a specific day with `mix day <number> <part>`
 
 ## Timing
+Target: <100 ms
 
 | Day    | Part 1 (ms) | Part 2 (ms) | Total (ms) | Good? |
 |--------|-------------|-------------|------------|-------|
