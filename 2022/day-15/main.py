@@ -6,6 +6,7 @@ import math
 import re
 
 from util.vec import Vec2
+from termcolor import colored
 
 
 def manhattan_distance(v1, v2):
@@ -57,7 +58,7 @@ def get_line_optimized(sensors, y, min_y=-math.inf, max_y=math.inf):
             # These segments overlap
             current_segment = (current_segment[0], max(s[1], current_segment[1]))
         else:
-            print(f'Not overlapped: {current_segment}, {s}')
+            #print(f'Not overlapped: {current_segment}, {s}')
             # These segments don't overlap, so count up!
             uncovered = current_segment[1]+1
             total_covered += current_segment[1] - current_segment[0]
@@ -137,4 +138,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))

@@ -3,6 +3,7 @@ import sys
 sys.path.append('..')
 import itertools
 from util.vec import Vec2, make_unit
+from termcolor import colored
 
 dirs = [Vec2(0, 1), Vec2(-1, 1), Vec2(1, 1)]
 def drop_grains(world, max_y, source, has_floor=False):
@@ -133,4 +134,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))

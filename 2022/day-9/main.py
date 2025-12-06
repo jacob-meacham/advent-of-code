@@ -2,6 +2,7 @@ import sys
 sys.path.append('..')
 
 from util.vec import Vec2, make_unit
+from termcolor import colored
 
 def step_knot_pair_optimized(lead, follow):
     move_vec = (lead.x - follow.x, lead.y - follow.y)
@@ -60,4 +61,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))

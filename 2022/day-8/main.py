@@ -1,5 +1,6 @@
 import operator
 from functools import reduce
+from termcolor import colored
 
 
 def calc_scenic_distance_from_dir(grid, start, dir):
@@ -87,4 +88,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))

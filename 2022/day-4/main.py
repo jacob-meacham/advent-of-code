@@ -1,4 +1,5 @@
 import re
+from termcolor import colored
 
 
 def is_assignment_contained(min0, max0, min1, max1):
@@ -39,4 +40,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))

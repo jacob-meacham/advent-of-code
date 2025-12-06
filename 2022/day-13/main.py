@@ -1,5 +1,6 @@
 import functools
 import itertools
+from termcolor import colored
 
 
 def do_compare(left, right):
@@ -64,4 +65,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))

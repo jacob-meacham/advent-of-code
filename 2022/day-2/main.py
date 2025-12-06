@@ -1,3 +1,5 @@
+from termcolor import colored
+
 # There is probably some kind of clever swizzle I could do here
 win_loss_dict = {
     'A': {'X': 3, 'Y': 6, 'Z': 0},
@@ -37,4 +39,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    p1, p2 = main()
+    print(colored('Part 1: ', 'white') + colored(str(p1), 'green', attrs=['bold']) + 
+          colored(' Part 2: ', 'white') + colored(str(p2), 'green', attrs=['bold']))
