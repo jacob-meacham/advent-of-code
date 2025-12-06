@@ -5,13 +5,11 @@
 [2020 Advent of Code](https://adventofcode.com/2020) with Rust!
 
 # Usage
-
 * To build, use `cargo build --release`
 * To run a day, use `cargo run --release --package day-x --bin day-x -- day-x/input`
 * To run benchmarks, use `python3 runner.py`
 
 # Timings
-
 Target: < 20ms
 
 | Day     | Timing (ms) | Good? |
