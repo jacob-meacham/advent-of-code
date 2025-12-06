@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 from typing import Dict, List
 import requests
+from dotenv import load_dotenv
 
 # Base directory (repo root, parent of scripts/)
 BASE_DIR = Path(__file__).parent.parent
@@ -20,11 +21,15 @@ AOC_BASE_URL = "https://adventofcode.com"
 
 
 def get_session_token() -> str:
-    """Get the Advent of Code session token from environment variable."""
+    """Get the Advent of Code session token from .env file or environment variable."""
+    # Load .env file from repo root
+    env_path = BASE_DIR / ".env"
+    load_dotenv(env_path)
+    
     token = os.getenv("AOC_SESSION")
     if not token:
         raise ValueError(
-            "AOC_SESSION environment variable not set. "
+            "AOC_SESSION not found in .env file or environment variable. "
             "Please set it to your Advent of Code session cookie value."
         )
     return token
@@ -126,8 +131,9 @@ def update_main_readme(years: List[int], stars: Dict[int, int]):
     # Generate badges
     badges = []
     for year in years:
-        if stars[year] > 0:
-            badges.append(generate_badge(year, stars[year]))
+        year_stars = stars.get(year, 0)
+        if year_stars > 0:
+            badges.append(generate_badge(year, year_stars))
     
     badge_line = " ".join(badges) if badges else ""
     
@@ -143,21 +149,31 @@ def update_main_readme(years: List[int], stars: Dict[int, int]):
         new_lines.append("# Advent of Code")
         start_idx = 0
     
-    # Add badges if they exist
-    if badge_line:
-        new_lines.append("")
-        new_lines.append(badge_line)
-    
     # Add year links
     new_lines.append("")
     new_lines.append(year_links)
     
-    # Keep rest of content (skip old year links line if it exists)
+    # Add badges if they exist (right after links)
+    if badge_line:
+        new_lines.append("")
+        new_lines.append(badge_line)
+    
+    # Keep rest of content (skip old year links line and badges for years we're updating)
     for i in range(start_idx, len(lines)):
         line = lines[i].strip()
         # Skip old year links line
         if '|' in line and any(str(year) in line for year in years):
             continue
+        # Skip old badges only for years we're generating new badges for
+        if line.startswith('!['):
+            # Check if this badge is for a year we're updating
+            should_skip = False
+            for year in years:
+                if stars.get(year, 0) > 0 and str(year) in line:
+                    should_skip = True
+                    break
+            if should_skip:
+                continue
         # Skip empty line after title if we already added one
         if i == start_idx and not line:
             continue
@@ -183,12 +199,6 @@ def update_year_readme(year: int, years: List[int], stars: int):
         new_lines.append(lines[i])
         i += 1
     
-    # Add badge if there's completion
-    if stars > 0:
-        badge = generate_badge(year, stars)
-        new_lines.append("")
-        new_lines.append(badge)
-    
     # Update year links
     year_links = generate_year_links(years)
     
@@ -204,16 +214,33 @@ def update_year_readme(year: int, years: List[int], stars: int):
             # Skip empty line after links if it exists
             if i < len(lines) and not lines[i].strip():
                 i += 1
+            # Skip old badge if it exists right after links (only if we're generating a new one)
+            if stars > 0 and i < len(lines) and lines[i].strip().startswith('!['):
+                i += 1
+            # Add badge right after links if there's completion
+            if stars > 0:
+                badge = generate_badge(year, stars)
+                new_lines.append("")
+                new_lines.append(badge)
+            continue
+        # Skip old badges that appear before links (only if we're generating a new one)
+        if stars > 0 and not found_links and line.strip().startswith('!['):
+            i += 1
             continue
         new_lines.append(line)
         i += 1
     
-    # If we didn't find a links line, add it after title/badge
+    # If we didn't find a links line, add it after title
     if not found_links:
-        # Insert after title and badge
-        insert_idx = len([line for line in new_lines if line.startswith('#') or line.startswith('!')])
+        # Insert after title
+        insert_idx = len([line for line in new_lines if line.startswith('#')])
         new_lines.insert(insert_idx, "")
         new_lines.insert(insert_idx + 1, year_links)
+        # Add badge right after links if there's completion
+        if stars > 0:
+            badge = generate_badge(year, stars)
+            new_lines.insert(insert_idx + 2, "")
+            new_lines.insert(insert_idx + 3, badge)
     
     readme_path.write_text('\n'.join(new_lines).rstrip() + '\n')
 
@@ -242,7 +269,8 @@ def main():
         print("2. Open browser developer tools (F12)")
         print("3. Go to Application/Storage > Cookies > https://adventofcode.com")
         print("4. Copy the value of the 'session' cookie")
-        print("5. Set it as an environment variable: export AOC_SESSION=your_token_here")
+        print("5. Add it to a .env file in the repo root: AOC_SESSION=your_token_here")
+        print("   Or set it as an environment variable: export AOC_SESSION=your_token_here")
         return
     
     years_to_fetch = sorted(args.years)
