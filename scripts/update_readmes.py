@@ -137,15 +137,6 @@ def update_main_readme(years: List[int], stars: Dict[int, int]):
     # Generate year links
     year_links = generate_year_links(years)
     
-    # Generate badges
-    badges = []
-    for year in years:
-        year_stars = stars.get(year, 0)
-        if year_stars > 0:
-            badges.append(generate_badge(year, year_stars))
-    
-    badge_line = " ".join(badges) if badges else ""
-    
     # Update content
     lines = content.split('\n')
     new_lines = []
@@ -162,27 +153,45 @@ def update_main_readme(years: List[int], stars: Dict[int, int]):
     new_lines.append("")
     new_lines.append(year_links)
     
-    # Add badges if they exist (right after links)
-    if badge_line:
+    # Find existing badges and update only fetched years
+    existing_badges = {}
+    badge_line_idx = None
+    for i in range(start_idx, len(lines)):
+        line = lines[i]
+        if line.startswith('!['):
+            badge_line_idx = i
+            # Parse badges from the line (badges are separated by spaces)
+            # Badge format: ![year](url)
+            badge_pattern = r'!\[(\d+)\]\([^)]+\)'
+            for match in re.finditer(badge_pattern, line):
+                badge_year = int(match.group(1))
+                badge_text = match.group(0)  # Full match including ![year](url)
+                existing_badges[badge_year] = badge_text
+            break
+    
+    # Update badges: keep existing ones, replace/add fetched ones
+    updated_badges = existing_badges.copy()
+    for year in stars:
+        if stars[year] > 0:
+            updated_badges[year] = generate_badge(year, stars[year])
+    
+    # Generate badge line if we have any badges
+    if updated_badges:
+        # Sort badges by year
+        sorted_years = sorted(updated_badges.keys())
+        badge_line = " ".join(updated_badges[year] for year in sorted_years)
         new_lines.append("")
         new_lines.append(badge_line)
     
-    # Keep rest of content (skip old year links line and badges for years we're updating)
+    # Keep rest of content (skip old year links line and old badge line)
     for i in range(start_idx, len(lines)):
         line = lines[i].strip()
         # Skip old year links line
         if '|' in line and any(str(year) in line for year in years):
             continue
-        # Skip old badges only for years we're generating new badges for
-        if line.startswith('!['):
-            # Check if this badge is for a year we're updating
-            should_skip = False
-            for year in years:
-                if stars.get(year, 0) > 0 and str(year) in line:
-                    should_skip = True
-                    break
-            if should_skip:
-                continue
+        # Skip old badge line (we've already processed it above)
+        if i == badge_line_idx:
+            continue
         # Skip empty line after title if we already added one
         if i == start_idx and not line:
             continue
