@@ -35,10 +35,17 @@ def get_session_token() -> str:
     return token
 
 
+def get_total_stars(year: int) -> int:
+    """Get the total number of stars for a given year."""
+    # Starting in 2025, Advent of Code has 12 puzzles (24 stars)
+    # Before 2025, it had 25 puzzles (50 stars)
+    return 24 if year >= 2025 else 50
+
+
 def fetch_completion(year: int, session_token: str) -> int:
     """
     Fetch completion count for a given year from Advent of Code leaderboard.
-    Returns the number of stars (0-50, where 50 = all 25 days completed).
+    Returns the number of stars (0-24 for 2025+, 0-50 for earlier years).
     """
     url = f"{AOC_BASE_URL}/{year}/leaderboard/self"
     cookies = {"session": session_token}
@@ -56,7 +63,8 @@ def fetch_completion(year: int, session_token: str) -> int:
         match = re.search(r'<span class="star-count">(\d+)\*</span>', html)
         if match:
             star_count = int(match.group(1))
-            if 0 <= star_count <= 50:
+            total_stars = get_total_stars(year)
+            if 0 <= star_count <= total_stars:
                 return star_count
         
         return 0
@@ -83,14 +91,15 @@ def find_years() -> List[int]:
     return sorted(years)
 
 
-def generate_badge(year: int, stars: int, total_stars: int = 50) -> str:
+def generate_badge(year: int, stars: int) -> str:
     """
     Generate a completion badge for a year.
-    Uses star count (0-50) where 50 = all 25 days completed.
+    Uses star count (0-24 for 2025+, 0-50 for earlier years).
     """
     if stars == 0:
         return ""
     
+    total_stars = get_total_stars(year)
     percentage = (stars / total_stars) * 100
     
     # Choose color based on completion
@@ -211,18 +220,23 @@ def update_year_readme(year: int, years: List[int], stars: int):
             new_lines.append(year_links)
             found_links = True
             i += 1
-            # Skip empty line after links if it exists
-            if i < len(lines) and not lines[i].strip():
-                i += 1
-            # Skip old badge if it exists right after links (only if we're generating a new one)
-            if stars > 0 and i < len(lines) and lines[i].strip().startswith('!['):
-                i += 1
-            # Add badge right after links if there's completion
+            # If we're adding a badge, handle blank lines and old badge
             if stars > 0:
+                # Skip empty line after links if it exists (we'll add our own)
+                if i < len(lines) and not lines[i].strip():
+                    i += 1
+                # Skip old badge if it exists right after links
+                if i < len(lines) and lines[i].strip().startswith('!['):
+                    i += 1
+                    # Skip blank line after old badge if it exists
+                    if i < len(lines) and not lines[i].strip():
+                        i += 1
+                # Add badge right after links
                 badge = generate_badge(year, stars)
                 new_lines.append("")
                 new_lines.append(badge)
                 new_lines.append("")
+            # If we're not adding a badge, preserve existing content (including blank lines)
             continue
         # Skip old badges that appear before links (only if we're generating a new one)
         if stars > 0 and not found_links and line.strip().startswith('!['):
@@ -285,7 +299,8 @@ def main():
         print(f"Fetching {year}...", end=" ", flush=True)
         star_count = fetch_completion(year, session_token)
         stars[year] = star_count
-        print(f"{star_count}/50 stars")
+        total_stars = get_total_stars(year)
+        print(f"{star_count}/{total_stars} stars")
         # Be polite - add a small delay between requests
         time.sleep(0.5)
     
