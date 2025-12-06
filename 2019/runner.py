@@ -1,11 +1,11 @@
-#!/usr/local/bin/python
+#!/usr/local/bin/python3
 import re
 import subprocess
 import argparse
 from pathlib import Path
 
 def get_bests():
-    with open('.bests', 'r') as f:
+    with open('.bests', 'a+') as f:
         bests = [float(b) for b in f.readlines()]
 
     return bests + [10000.0] * (25 - len(bests))
@@ -32,7 +32,7 @@ def main(force_rebuild: bool, start_from: int) -> None:
 
         executable = directory / 'bin' / f'day{x}'
         if not executable.exists() or force_rebuild:
-            subprocess.run(['/opt/homebrew/bin/go', 'build', '-o', f'day{x}/bin/day{x}', f'day{x}/day{x}.go'], text=True,
+            subprocess.run(['go', 'build', '-o', f'day{x}/bin/day{x}', f'day{x}/day{x}.go'], text=True,
                            capture_output=True)
 
         output = subprocess.run([f'day{x}/bin/day{x}', '-bench'], text=True, capture_output=True)

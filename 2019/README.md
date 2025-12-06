@@ -2,6 +2,17 @@
 
 [2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024)
 
+[2019 Advent of Code](https://adventofcode.com/2019) with Go!
+
+# Usage
+* To build, use: `go build`
+* To run a day, use: `go run dayx/dayx.go`
+* To run benchmarks, use: `python3 runner.py`
+
+# Timings
+
+* Target: <100 ms
+
 | Day    | Timing (ms) | Good? |
 |--------|-------------|-------|
 | Day 1  | 0.00000     |✅     |
