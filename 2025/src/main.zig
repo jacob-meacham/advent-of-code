@@ -1,4 +1,5 @@
 const std = @import("std");
+const termcolor = @import("termcolor.zig");
 const day1 = @import("day_1.zig");
 const day2 = @import("day_2.zig");
 const day3 = @import("day_3.zig");
@@ -11,6 +12,8 @@ const day9 = @import("day_9.zig");
 const day10 = @import("day_10.zig");
 const day11 = @import("day_11.zig");
 const day12 = @import("day_12.zig");
+
+const TARGET: f64 = 50.0;
 
 const Action = enum {
     bench,
@@ -94,7 +97,7 @@ fn printBenchmarkHeader() void {
 
 fn printBenchmarkRow(day_num: usize, p1: f64, p2: f64) void {
     const total = p1 + p2;
-    const good = if (total < 100.0) "✅" else "❌";
+    const good = if (total < TARGET) "✅" else "❌";
 
     std.debug.print(
         "| Day {d:<2} | {d:>11.2} | {d:>11.2} | {d:>10.2} | {s:<6} |\n",
@@ -102,8 +105,15 @@ fn printBenchmarkRow(day_num: usize, p1: f64, p2: f64) void {
     );
 }
 
-fn printBenchmarkFooter() void {
+fn printBenchmarkTotals(p1: f64, p2: f64, num_days: usize) void {
+    const total = p1 + p2;
+    const good = if ((total / @as(f64, @floatFromInt(num_days))) < TARGET) "✅" else "❌";
+
     std.debug.print("|--------|-------------|-------------|------------|-------|\n", .{});
+    std.debug.print(
+        "| Total  | {d:>11.2} | {d:>11.2} | {d:>10.2} | {s:<6} |\n",
+        .{ p1, p2, total, good },
+    );
 }
 
 pub fn main() !void {
@@ -147,12 +157,19 @@ pub fn main() !void {
                 std.debug.print("Day {d}: Part1 - {d:.3} ms, Part 2 - {d:.3} ms\n",
                     .{ dayNum, avgMs[0], avgMs[1] });
             } else {
+                var total_p1: f64 = 0;
+                var total_p2: f64 = 0;
+                var num_days: usize = 0;
+
                 printBenchmarkHeader();
                 for (days) |day| {
-                    const avgMs = try benchmarkDay(allocator, day);
+                    const avgMs = benchmarkDay(allocator, day) catch continue;
+                    total_p1 += avgMs[0];
+                    total_p2 += avgMs[1];
+                    num_days += 1;
                     printBenchmarkRow(day.dayNum, avgMs[0], avgMs[1]);
                 }
-                printBenchmarkFooter();
+                printBenchmarkTotals(total_p1, total_p2, num_days);
             }
         },
         .day => {
@@ -168,7 +185,19 @@ pub fn main() !void {
             const val1 = try day.part1(allocator, input);
             const val2 = try day.part2(allocator, input);
 
-            std.debug.print("Part 1: {}\nPart 2: {}\n", .{ val1, val2 });
+            const label1 = try termcolor.white(allocator, "Part 1: ");
+            defer allocator.free(label1);
+            
+            const answer1 = try termcolor.brightGreen(allocator, val1);
+            defer allocator.free(answer1);
+            
+            const label2 = try termcolor.white(allocator, " Part 2: ");
+            defer allocator.free(label2);
+            
+            const answer2 = try termcolor.brightGreen(allocator, val2);
+            defer allocator.free(answer2);
+            
+            std.debug.print("{s}{s}{s}{s}\n", .{ label1, answer1, label2, answer2 });
         }
     }
 }
