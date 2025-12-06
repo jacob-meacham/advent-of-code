@@ -2,6 +2,7 @@
 [2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024) | [2025](/2025)
 
 ![2019](https://img.shields.io/badge/2019-37%2F50-yellow)
+
 [2019 Advent of Code](https://adventofcode.com/2019) with Go!
 
 # Usage

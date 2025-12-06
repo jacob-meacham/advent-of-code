@@ -2,6 +2,7 @@
 [2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024) | [2025](/2025)
 
 ![2024](https://img.shields.io/badge/2024-16%2F50-orange)
+
 [2024 Advent of Code](https://adventofcode.com/2024) Elixir edition!
 
 # Usage

@@ -2,6 +2,7 @@
 [2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024) | [2025](/2025)
 
 ![2025](https://img.shields.io/badge/2025-8%2F50-red)
+
 [2024 Advent of Code](https://adventofcode.com/2024) Zig edition!
 
 # Usage

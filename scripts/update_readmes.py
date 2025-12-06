@@ -222,6 +222,7 @@ def update_year_readme(year: int, years: List[int], stars: int):
                 badge = generate_badge(year, stars)
                 new_lines.append("")
                 new_lines.append(badge)
+                new_lines.append("")
             continue
         # Skip old badges that appear before links (only if we're generating a new one)
         if stars > 0 and not found_links and line.strip().startswith('!['):
@@ -241,6 +242,7 @@ def update_year_readme(year: int, years: List[int], stars: int):
             badge = generate_badge(year, stars)
             new_lines.insert(insert_idx + 2, "")
             new_lines.insert(insert_idx + 3, badge)
+            new_lines.insert(insert_idx + 4, "")
     
     readme_path.write_text('\n'.join(new_lines).rstrip() + '\n')
 

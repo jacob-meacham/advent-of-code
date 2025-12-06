@@ -2,6 +2,7 @@
 [2018](/2018) | [2019](/2019) | [2020](/2020) | [2022](/2022) | [2023](/2023) | [2024](/2024) | [2025](/2025)
 
 ![2023](https://img.shields.io/badge/2023-50%2F50-brightgreen)
+
 [2023 Advent of Code](https://adventofcode.com/2023) with C#!
 
 # Usage

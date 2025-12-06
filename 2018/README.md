@@ -3,6 +3,7 @@
 
 ![2018](https://img.shields.io/badge/2018-5%2F50-red)
 
+
 [2018 Advent of Code](https://adventofcode.com/2018). I'm using a different programming language each day.
 
 * Day 1 - Clojure (Complete)
