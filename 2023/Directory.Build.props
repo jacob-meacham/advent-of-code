@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <SelfContained>true</SelfContained>
+    <!-- RuntimeIdentifier can be overridden via -p:RuntimeIdentifier=RID on command line -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+</Project>
+
