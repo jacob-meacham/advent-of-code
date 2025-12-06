@@ -4,12 +4,12 @@
 
 [2022 Advent of Code](https://adventofcode.com/2022) with Python!
 
+# Usage
 * To setup, use: `uv sync`
 * To run a day, use: `uv run runner.py --day x --no-timings` or `cd day-x && uv run main.py`
 * To run benchmarks, use: `uv run runner.py --timings --no-answers`
 
 # Timing
-
 Target: <500 ms
 
 | Day     | Timing (ms) | Good? |
@@ -30,4 +30,5 @@ Target: <500 ms
 | Day 14  |  253.07     |✅     |
 | Day 15  | 10000.00    |❌     |
 | Day 16  |  554.93     |❌     |
+|---------|-------------|-------|
 | Total   | 10941.28    |❌     |
