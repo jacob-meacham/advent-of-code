@@ -1,0 +1,25 @@
+# CMake build artifacts
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+Makefile
+CMakeLists.txt.user
+
+# Build outputs
+day_2
+*.o
+*.a
+*.so
+*.dylib
+
+# Build directories
+build/
+cmake-build-*/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
