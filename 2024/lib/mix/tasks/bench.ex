@@ -51,6 +51,9 @@ defmodule Mix.Tasks.Bench do
     end)
 
     IO.puts("|--------|-------------|-------------|------------|------|")
+    
+    grand_total = Enum.reduce(table_data, 0, fn %{total: total}, acc -> acc + total end)
+    IO.puts "| **Total** | | | **#{Float.round(grand_total, 2)}** | |"
   end
 
   defp only_day_modules(module_name) do
