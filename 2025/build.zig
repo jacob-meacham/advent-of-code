@@ -60,6 +60,10 @@ pub fn build(b: *std.Build) void {
     // by passing `--prefix` or `-p`.
     b.installArtifact(exe);
 
+    // This creates a build-only step that just compiles without running
+    const build_step = b.step("build-only", "Build the executable without running");
+    build_step.dependOn(b.getInstallStep());
+
     // This creates a top level step. Top level steps have a name and can be
     // invoked by name when running `zig build` (e.g. `zig build run`).
     // This will evaluate the `run` step rather than the default step.
