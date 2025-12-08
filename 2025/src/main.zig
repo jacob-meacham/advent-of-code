@@ -1,5 +1,6 @@
 const std = @import("std");
 const termcolor = @import("termcolor.zig");
+const bests_mod = @import("bests.zig");
 const day1 = @import("day_1.zig");
 const day2 = @import("day_2.zig");
 const day3 = @import("day_3.zig");
@@ -14,7 +15,6 @@ const day11 = @import("day_11.zig");
 const day12 = @import("day_12.zig");
 
 const TARGET: f64 = 50.0;
-
 const Action = enum {
     bench,
     day
@@ -142,10 +142,13 @@ pub fn main() !void {
 
     switch (action_enum) {
         .bench => {
+            var bests = try bests_mod.Bests.fromFile(allocator, bests_mod.DEFAULT_BESTS_FILE);
             if (dayToRun) | dayNum | {
-                const avgMs = try benchmarkDay(allocator, days[dayNum-1]);
+                var avgMs = try benchmarkDay(allocator, days[dayNum-1]);
+                avgMs = bests.update(dayNum-1, avgMs);
                 std.debug.print("Day {d}: Part1 - {d:.3} ms, Part 2 - {d:.3} ms\n",
                     .{ dayNum, avgMs[0], avgMs[1] });
+
             } else {
                 var total_p1: f64 = 0;
                 var total_p2: f64 = 0;
@@ -153,14 +156,17 @@ pub fn main() !void {
 
                 printBenchmarkHeader();
                 for (days) |day| {
-                    const avgMs = benchmarkDay(allocator, day) catch continue;
+                    var avgMs = benchmarkDay(allocator, day) catch continue;
+                    avgMs = bests.update(day.dayNum, avgMs);
                     total_p1 += avgMs[0];
                     total_p2 += avgMs[1];
                     num_days += 1;
                     printBenchmarkRow(day.dayNum, avgMs[0], avgMs[1]);
+
                 }
                 printBenchmarkTotals(total_p1, total_p2, num_days);
             }
+            try bests.writeToFile(allocator, bests_mod.DEFAULT_BESTS_FILE);
         },
         .day => {
             const dayNum = dayToRun orelse usage(args[0]);

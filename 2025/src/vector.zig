@@ -11,6 +11,30 @@ pub const DIRECTIONS_8 = [_][2]i32{
     .{ 1, 1 },   // down-right
 };
 
+pub const Pos2 = struct {
+    const Self = @This();
+
+    x: isize,
+    y: isize,
+
+    pub fn from(x: isize, y: isize) Self {
+        return .{
+            .x = x,
+            .y = y
+        };
+    }
+
+    pub fn fromU(ux: usize, uy: usize) Self {
+        const x: isize = @intCast(ux);
+        const y: isize = @intCast(uy);
+
+        return .{
+            .x = x,
+            .y = y
+        };
+    }
+};
+
 pub fn Grid2D(comptime T: type) type {
     return struct {
         const Self = @This();
@@ -47,15 +71,23 @@ pub fn Grid2D(comptime T: type) type {
                 if (line.len > 0) try line_list.append(allocator, line);
             }
 
-            const height = line_list.items.len;
+            return createFromSlice(allocator, line_list.items, convertFn);
+        }
+
+        pub fn createFromSlice(
+            allocator: std.mem.Allocator,
+            lines: [][] const u8,
+            comptime convertFn: fn (char: u8, x: usize, y: usize) anyerror!T
+        ) !Self {
+            const height = lines.len;
             if (height == 0) return error.EmptyInput;
-            const width = line_list.items[0].len;
+            const width = lines[0].len;
 
             var grid = try Self.init(allocator, width, height);
             errdefer grid.deinit();
 
-            for (line_list.items, 0..) |line, x| {
-                for (line, 0..) |char, y| {
+            for (lines, 0..) |line, y| {
+                for (line, 0..) |char, x| {
                     grid.set(x, y, try convertFn(char, x, y));
                 }
             }
@@ -64,7 +96,7 @@ pub fn Grid2D(comptime T: type) type {
         }
 
         pub fn get(self: *const Self, x: usize, y: usize) T {
-            return self.cells[x * self.width + y];
+            return self.cells[y * self.width + x];
         }
 
         pub fn getMaybe(self: *const Self, x: isize, y: isize) ?T {
@@ -75,19 +107,19 @@ pub fn Grid2D(comptime T: type) type {
             const ux: usize = @intCast(x);
             const uy: usize = @intCast(y);
 
-            return self.cells[ux * self.width + uy];
+            return self.cells[uy * self.width + ux];
         }
 
         pub fn getPtr(self: *Self, x: usize, y: usize) *T {
-            return &self.cells[x * self.width + y];
+            return &self.cells[y * self.width + x];
         }
 
         pub fn set(self: *Self, x: usize, y: usize, value: T) void {
-            self.cells[x * self.width + y] = value;
+            self.cells[y * self.width + x] = value;
         }
 
         pub fn contains(self: *const Self, x: isize, y: isize) bool {
-            return x >= 0 and x < self.height and y >= 0 and y < self.width;
+            return x >= 0 and x < self.width and y >= 0 and y < self.height;
         }
 
         pub const CellIterator = struct {
@@ -97,8 +129,8 @@ pub fn Grid2D(comptime T: type) type {
             pub fn next(self: *CellIterator) ?struct { T, usize, usize } {
                 if (self.index >= self.grid.cells.len) return null;
 
-                const x = self.index / self.grid.width;
-                const y = self.index % self.grid.width;
+                const y = self.index / self.grid.width;
+                const x = self.index % self.grid.width;
                 const cell = self.grid.cells[self.index];
                 self.index += 1;
 
