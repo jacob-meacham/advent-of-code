@@ -1,4 +1,5 @@
 const std = @import("std");
+const math = @import("math.zig");
 
 const IdNumber = struct {
     low: u64,
@@ -55,19 +56,8 @@ fn parseInput(allocator: std.mem.Allocator, input: []const u8) ![]const struct {
     return idRanges.toOwnedSlice(allocator);
 }
 
-fn countDigits(num: u64) usize {
-    var n = num;
-
-    var count: usize = 0;
-    while (n > 0) {
-        n = n / 10;  // or just n / 10 for positive numbers
-        count += 1;
-    }
-    return count;
-}
-
 fn repeatNumber(n: u64, times: usize) u64 {
-    const digits = countDigits(n);
+    const digits = math.countDigits(n);
     const shift = std.math.pow(u64, 10, digits);
 
     var res: u64 = 0;
@@ -115,7 +105,7 @@ fn allInvalidInRange(allocator: std.mem.Allocator, lower: IdNumber, upper: IdNum
 
     var candidateNum: u64 = 1;
     while (true) {
-        const candidateDigits = countDigits(candidateNum);
+        const candidateDigits = math.countDigits(candidateNum);
         if (candidateDigits > upper.count/2) {
             break;
         }

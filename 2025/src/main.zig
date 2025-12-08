@@ -117,16 +117,6 @@ fn printBenchmarkTotals(p1: f64, p2: f64, num_days: usize) void {
 }
 
 pub fn main() !void {
-    // var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    // defer {
-    //     const leaked = gpa.deinit();
-    //     if (leaked == .leak) {
-    //         std.log.err("MEMORY LEAK DETECTED!", .{});
-    //         std.process.exit(1);
-    //     }
-    // }
-    // const allocator = gpa.allocator();
-
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit(); // frees everything at once
 
